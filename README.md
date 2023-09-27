@@ -33,6 +33,8 @@ By way of example the Omnichannel Inventory Postman Collection used two Connecte
 - Postman_OCI
 - Postman_OCI_ConnectApi
 
+See [respository here](https://github.com/tzarrsf/omnichannel-inventory-postman-setup-with-example-files/)
+
 You will need to obtain some values from your Connected App in order to establish connectivity (see: Variables)
 
 ## oAuth 2.0 is set __once__ in each folder
