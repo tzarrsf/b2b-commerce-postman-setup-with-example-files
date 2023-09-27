@@ -4,7 +4,7 @@ This material is supplemental to the B2B Commerce Partner Learning Camp curricul
 
 ## What this collection is and isn't
 
-This collection is intended to be used for a B2B sstandalone setup. That isn't to say you can't use it with a Slaesforce Org containing other commerce products, just that B2B is what's targeted.
+This collection is intended to be used for a B2B standalone setup. That isn't to say you can't use it with a Salesforce Org containing other commerce products, just that B2B is what's targeted.
 
 ### This collection will eventually provide the following (some are a work in progress)
 
@@ -62,7 +62,7 @@ Just follow these steps which will also be provided during an oAuth error state 
 
 ## Variables
 
-__Note__: You must set up your environment variables correctly for this all to work. Collection variables will be calculated between requests and used in susbsequent requests. The naming convention used int he collection is to prefix with an underscore for collection variables.
+__Note__: You must set up your environment variables correctly for this all to work. Collection variables will be calculated between requests and used in subsequent  requests. The naming convention used in the collection is to prefix with an underscore for collection variables.
 
 ### Environment variables can be used to provide comma delimited values for these values
 
@@ -96,8 +96,8 @@ This Postman collection relies on the following variables:
 | `webstoreName` | Name of the webstore used to look up a corresponding Id | The value specified when the store / site was created such as 'B2B LWR Enhanced Store from TSO.' Can be found in the Commerce App under 'Stores.' |
 | `buyerUsername` | Registered B2B Buyer User's username. | User supplied. |
 | `buyerPassword` | Registered B2B Buyer User's password. | User supplied. |
-| `buyerAccountName` | Name of the Account used to look up the Accoujnt Id which is tied to the Buyer User. | User supplied. Example: `United Coffee Bean Corp` |
-| `productNamesCommaDelimited` | Commma-delimited list of product names which are resolved to Ids. | User supplied: Example `Testa Rossa Coffee Machine (Sample),Capricorn I Group Espresso Machine (Sample)` |
+| `buyerAccountName` | Name of the Account used to look up the Account Id which is tied to the Buyer User. | User supplied. Example: `United Coffee Bean Corp` |
+| `productNamesCommaDelimited` | Comma-delimited list of product names which are resolved to Ids. | User supplied: Example `Testa Rossa Coffee Machine (Sample),Capricorn I Group Espresso Machine (Sample)` |
 | `productSearchTerm` | The search term to use for a Happy Path | User supplied: Example `Coffee` |
 | `currencyIsoCode` | The currency code for the cart. | User supplied: Example `USD` for United States Dollar |
 
