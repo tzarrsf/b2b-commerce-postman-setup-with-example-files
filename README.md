@@ -18,7 +18,7 @@ This material is supplemental to the B2B Commerce Partner Learning Camp curricul
 12. Pricing / Guest
 13. Get Inventory Availability (Log In Flow + Connect API)
 14. Get Inventory Availability (oAuth Flow + Connect API)
-15. Search Operations (like indexing)
+15. Search Operations (indexing for now)
 
 ## Environment variables can be used to provide comma delimited values for:
 
@@ -64,5 +64,8 @@ This Postman collection relies on the following variables:
 | `buyerUsername` | Registered B2B Buyer User's username. | User supplied. |
 | `buyerPassword` | Registered B2B Buyer User's password. | User supplied. |
 | `buyerAccountName` | Name of the Account used to look up the Accoujnt Id which is tied to the Buyer User. | User supplied. Example: `United Coffee Bean Corp` |
+| `productNamesCommaDelimited` | Commma-delimited list of product names which are resolved to Ids. | User supplied: Example `Testa Rossa Coffee Machine (Sample),Capricorn I Group Espresso Machine (Sample)` |
+| `productSearchTerm` | The search term to use for a Happy Path | User supplied: Example `Coffee` |
+| `currencyIsoCode` | The currency code for the cart. | User supplied: Example `USD` for United States Dollar |
 
-Consult the curriculum and course documentation for additional details.
+Consult the Partner Learning Camp B2B Commerce curriculum and course documentation for additional details.
