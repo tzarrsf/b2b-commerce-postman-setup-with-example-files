@@ -68,7 +68,7 @@ __Note__: You must set up your environment variables correctly for this all to w
 
 ### Environment variables can be used to provide comma delimited values for these values
 
- 1. productNamesCommaDelimited (used in this collection)
+ 1. productNamesCommaDelimited
  2. productStockKeepingUnitsCommaDelimited (used in OCI Postman collection)
  3. locationGroupIdentifiersCommaDelimited (used in OCI Postman collection)
  4. locationIdentifiersCommaDelimited (used in OCI Postman collection)
