@@ -20,19 +20,28 @@ This material is supplemental to the B2B Commerce Partner Learning Camp curricul
 14. Get Inventory Availability (oAuth Flow + Connect API)
 15. Search Operations (indexing for now)
 
-## Environment variables can be used to provide comma delimited values for:
+## Environment variables can be used to provide comma delimited values for these values:
 
- 1.  Single Capricorn Coffee item
- 2.  Multiple Capricorn Coffee items
- 3.  Single item in which you supply the SKU
+ 1. productNamesCommaDelimited
+ 2. productStockKeepingUnitsCommaDelimited (used in OCI Postman collection)
+ 3. locationGroupIdentifiersCommaDelimited (used in OCI Postman collection)
+ 4. locationIdentifiersCommaDelimited (used in OCI Postman collection)
+
+## Environment variables can be used to provide a string value for these values:
+
+ 1. productSearchTerm
 
 ## You may need to set up a Connected App in your org if you want to be able to use Connect and other flavors of APIs:
+
 - Postman_OCI
 - Postman_OCI_ConnectApi
 
-## oAuth 2.0 is set once in each folder and checked throughout
+## oAuth 2.0 is set __once__ in each folder and checked throughout by using Beared Token authentication on requests needing it.
+
+### Key points
+
 A. Look for the request with a name like "Set your oAuth 2.0 Token in Authorization tab"
-B. Don't try to do a bunch of manual work here. Just follow these steps which will also be provided during an error state in the Console:
+B. Don't try to do a bunch of manual work here with athentication setup as the nedded variables are all filled in for you. Just follow these steps which will also be provided during an oAuth error state in the __Console__ as errors.
 
 1. Click on the Request with a name like "Set your oAuth 2.0 Token here in Authorization tab"
 2. Click the "Authorization" tab
