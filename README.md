@@ -4,7 +4,7 @@ This material is supplemental to the B2B Commerce Partner Learning Camp curricul
 
 ## What this collection is and isn't
 
-This collection is intended to be used for a B2B sstandalone setup. 
+This collection is intended to be used for a B2B sstandalone setup. That isn't to say you can't use it with a Slaesforce Org containing other commerce products, just that B2B is what's targeted.
 
 ### This collection will eventually provide the following (some are a work in progress)
 
@@ -24,37 +24,39 @@ This collection is intended to be used for a B2B sstandalone setup.
 14. Get Inventory Availability (oAuth Flow + Connect API)
 15. Search Operations (indexing for now)
 
-## You may need to set up a Connected App in your org if you want to be able to use Connect APIs and other flavors
+## You may need to set up a Connected App in your org if you want to be able to use the APIs (Connect APIs and other flavors such as SOAP may be in play)
 
-The Omnichannel Inventory Postman Collection used these connected apps
+By way of example the Omnichannel Inventory Postman Collection used these connected apps
 
 - Postman_OCI (for headless)
 - Postman_OCI_ConnectApi (for the connect API)
 
-You will need to obtain values from your Connected App to esyablish connectivity.
+You will need to obtain some values from your Connected App in order to establish connectivity.
 
-## oAuth 2.0 is set __once__ in each folder and checked throughout by using Beared Token authentication on requests needing it.
+## oAuth 2.0 is set __once__ in each folder and tokens are passed in subsequent requests using Bearer Token authentication on the requests needing it.
 
 ### Key points
 
 A. Look for the request with a name like "Set your oAuth 2.0 Token in Authorization tab"
-B. Don't try to do a bunch of manual work here with athentication setup as the nedded variables are all filled in for you. Just follow these steps which will also be provided during an oAuth error state in the __Console__ as errors.
+B. Don't try to do a bunch of manual work on your token setup or get fancy as it's all filled in for you already using variables.
+
+Just follow these steps which will also be provided during an oAuth error state in Postman's __Console__ as errors:
 
 1. Click on the Request with a name like "Set your oAuth 2.0 Token here in Authorization tab"
 2. Click the "Authorization" tab
 3. Click the "Get New Access Token" button
 4. Click the "Proceed" button
 5. Click the "Use Token" button
-6. Optional - Use the delete button's dropdown option to remove expired tokens
-7. Retry your request
+6. Optional - Use the delete button's dropdown option to remove expired tokens (it's best to remove all of them except the newest)
+7. Retry your request(s)
 
 ## Variables
 
-__Note__: You must set up your environment variables correctly for this all to work. Collection variables will be calculated between requests and used in susbsequent requests.
+__Note__: You must set up your environment variables correctly for this all to work. Collection variables will be calculated between requests and used in susbsequent requests. The naming convention used int he collection is to prefix with an underscore for collection variables.
 
 ### Environment variables can be used to provide comma delimited values for these values
 
- 1. productNamesCommaDelimited
+ 1. productNamesCommaDelimited (used in this collection)
  2. productStockKeepingUnitsCommaDelimited (used in OCI Postman collection)
  3. locationGroupIdentifiersCommaDelimited (used in OCI Postman collection)
  4. locationIdentifiersCommaDelimited (used in OCI Postman collection)
