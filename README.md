@@ -24,7 +24,9 @@ This collection is intended to be used for a B2B sstandalone setup. That isn't t
 14. Get Inventory Availability (oAuth Flow + Connect API)
 15. Search Operations (indexing for now)
 
-## You may need to set up a Connected App in your org if you want to be able to use the APIs (Connect APIs and other flavors such as SOAP may be in play)
+## You need to set up a Connected App
+
+Because we're using APIs you'll need to set up a Connected App in your org as Connect APIs and other flavors such as SOAP may be in play.
 
 By way of example the Omnichannel Inventory Postman Collection used these connected apps
 
