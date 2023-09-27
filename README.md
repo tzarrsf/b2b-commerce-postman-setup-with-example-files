@@ -26,24 +26,24 @@ This collection is intended to be used for a B2B sstandalone setup. That isn't t
 
 ## You need to set up a Connected App
 
-Because we're using APIs you'll need to set up a Connected App in your org as Connect APIs and other flavors such as SOAP may be in play.
+Because we're using APIs you'll need to set up a Connected App in your org since the Connect APIs and other flavors of APIs like SOAP may be in play.
 
-By way of example the Omnichannel Inventory Postman Collection used these connected apps
+By way of example the Omnichannel Inventory Postman Collection used two Connected Apps (one for the Headless APIs and one for the Connect APIs)
 
-- Postman_OCI (for headless)
-- Postman_OCI_ConnectApi (for the connect API)
+- Postman_OCI
+- Postman_OCI_ConnectApi
 
 You will need to obtain some values from your Connected App in order to establish connectivity.
 
 ## oAuth 2.0 is set __once__ in each folder
 
-Please do not take a "do-it-yourself" approach here. Why?
+Please don't take a "do-it-yourself" approach here. Why?
 
-1. You don't need to
-2. There's some scripting which checks your token set up is correct
+1. Most importantly, you don't need to.
+2. There's some scripting which checks your token set up is correct to begin making requests
 3. Tokens are passed in subsequent requests using __Bearer Token__ authentication on the requests needing it
 4. This was done "by design" so you can easily add your own requests or copy them and move them around with little to no impact when oAuth is needed.
-5. You can also find anc copy the request named something like "Set your oAuth 2.0 Token in Authorization tab"
+5. You can also find and copy the requests named something like "Set your oAuth 2.0 Token in Authorization tab" whenever you need to establish oAuth 2.0 before another request
 
 ### Key points
 
