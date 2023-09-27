@@ -20,7 +20,7 @@ This material is supplemental to the B2B Commerce Partner Learning Camp curricul
 14. Get Inventory Availability (oAuth Flow + Connect API)
 15. Search Operations (like indexing)
 
-## Environment variables can be used to provid comma delimited values for:
+## Environment variables can be used to provide comma delimited values for:
 
  1.  Single Capricorn Coffee item
  2.  Multiple Capricorn Coffee items
