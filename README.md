@@ -1,8 +1,12 @@
 # B2B Commerce Postman Setup with example files
 
-This material is supplemental to the B2B Commerce Partner Learning Camp curricula. See the contained courses for the complete setup procedure.
+This material is supplemental to the B2B Commerce Partner Learning Camp curricula. See the curricula and the contained courses for the complete setup procedure of a B2B Commerce standalone environment.
 
-## This collection will eventually provide the following (some are a work in progress):
+## What this collection is and isn't
+
+This collection is intended to be used for a B2B sstandalone setup. 
+
+### This collection will eventually provide the following (some are a work in progress)
 
 1. Product Search (Log In Flow)
 2. Product Search (oAuth Flow)
@@ -20,21 +24,14 @@ This material is supplemental to the B2B Commerce Partner Learning Camp curricul
 14. Get Inventory Availability (oAuth Flow + Connect API)
 15. Search Operations (indexing for now)
 
-## Environment variables can be used to provide comma delimited values for these values:
+## You may need to set up a Connected App in your org if you want to be able to use Connect APIs and other flavors
 
- 1. productNamesCommaDelimited
- 2. productStockKeepingUnitsCommaDelimited (used in OCI Postman collection)
- 3. locationGroupIdentifiersCommaDelimited (used in OCI Postman collection)
- 4. locationIdentifiersCommaDelimited (used in OCI Postman collection)
+The Omnichannel Inventory Postman Collection used these connected apps
 
-## Environment variables can be used to provide a string value for these values:
+- Postman_OCI (for headless)
+- Postman_OCI_ConnectApi (for the connect API)
 
- 1. productSearchTerm
-
-## You may need to set up a Connected App in your org if you want to be able to use Connect and other flavors of APIs:
-
-- Postman_OCI
-- Postman_OCI_ConnectApi
+You will need to obtain values from your Connected App to esyablish connectivity.
 
 ## oAuth 2.0 is set __once__ in each folder and checked throughout by using Beared Token authentication on requests needing it.
 
@@ -51,7 +48,22 @@ B. Don't try to do a bunch of manual work here with athentication setup as the n
 6. Optional - Use the delete button's dropdown option to remove expired tokens
 7. Retry your request
 
-## Standardized variables (also documented in the Postman collection)
+## Variables
+
+__Note__: You must set up your environment variables correctly for this all to work. Collection variables will be calculated between requests and used in susbsequent requests.
+
+### Environment variables can be used to provide comma delimited values for these values
+
+ 1. productNamesCommaDelimited
+ 2. productStockKeepingUnitsCommaDelimited (used in OCI Postman collection)
+ 3. locationGroupIdentifiersCommaDelimited (used in OCI Postman collection)
+ 4. locationIdentifiersCommaDelimited (used in OCI Postman collection)
+
+### Environment variables can be used to provide a string value for these values
+
+ 1. productSearchTerm
+
+### Standardized variables (also documented in the Postman collection)
 
 ⚠️ **_Note_**: The naming convention found here is used across other Salesforce Commerce product Postman collections in the Partner Readiness space when possible to support reuse and collaboration.
 
