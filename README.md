@@ -33,7 +33,7 @@ By way of example the Omnichannel Inventory Postman Collection used two Connecte
 - Postman_OCI
 - Postman_OCI_ConnectApi
 
-See [respository here](https://github.com/tzarrsf/omnichannel-inventory-postman-setup-with-example-files/)
+See [repository here](https://github.com/tzarrsf/omnichannel-inventory-postman-setup-with-example-files/)
 
 You will need to obtain some values from your Connected App in order to establish connectivity (see: [Variables](./#Variables))
 
@@ -42,7 +42,7 @@ You will need to obtain some values from your Connected App in order to establis
 Please don't take a "do-it-yourself" approach here. Why?
 
 1. Most importantly, you don't need to.
-2. There's some scripting which checks your token set up is correct to begin making requests.
+2. There's some scripting which checks if your token set up is correct to begin making requests.
 3. Tokens are passed in subsequent requests using __Bearer Token__ authentication on the requests needing it.
 4. This was done "by design" so you can easily add your own requests or copy them and move them around with little to no impact when oAuth is needed.
 5. You can also find and copy the requests named something like "Set your oAuth 2.0 Token in Authorization tab" whenever you need to establish oAuth 2.0 before another request.
