@@ -33,7 +33,15 @@ By way of example the Omnichannel Inventory Postman Collection used these connec
 
 You will need to obtain some values from your Connected App in order to establish connectivity.
 
-## oAuth 2.0 is set __once__ in each folder and tokens are passed in subsequent requests using Bearer Token authentication on the requests needing it.
+## oAuth 2.0 is set __once__ in each folder
+
+Please do not take a "do-it-yourself" approach here. Why?
+
+1. You don't need to
+2. There's some scripting which checks your token set up is correct
+3. Tokens are passed in subsequent requests using __Bearer Token__ authentication on the requests needing it
+4. This was done "by design" so you can easily add your own requests or copy them and move them around with little to no impact when oAuth is needed.
+5. You can also find anc copy the request named something like "Set your oAuth 2.0 Token in Authorization tab"
 
 ### Key points
 
