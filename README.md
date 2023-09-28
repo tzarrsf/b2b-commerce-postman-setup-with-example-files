@@ -59,6 +59,8 @@ Authentication is generally handled one of three ways:
 
 This is handled inline. Just supply the environment with the needed variables like these and the collection ans scripting should take care of the rest for you:
 
+| Name | Description | Location |
+| --- | --- | --- |
 | `orgLoginUrl` | Either `https://login.salesforce.com` (production/trial) or `https://test.salesforce.com` (sandbox) | User supplied |
 | `orgHost` | Protocol and host portion of the Salesforce org's URL | User supplied. Example: `https://yourusername-august.lightning.force.com` |
 | `orgAdminUsername` | The System Administrator username for the Salesforce org | User supplied |
