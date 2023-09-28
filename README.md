@@ -1,4 +1,4 @@
-# Salesforce B2B Commerce Postman Setup with example files
+# Salesforce B2B Commerce Postman Setup
 
 This material is supplemental to the B2B Commerce Partner Learning Camp curricula. See the curricula and the contained courses for the complete setup procedure of a B2B Commerce standalone environment.
 
