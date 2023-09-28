@@ -79,8 +79,8 @@ Please don't take a "do-it-yourself" approach here. Why?
 
 #### Establishing oAuth 2.0 (First Time and Details)
 
-A. Look for the request with a name like "Set your oAuth 2.0 Token in Authorization tab"
-B. Don't try to do a bunch of manual work on your token setup or get fancy as it's all filled in for you already using variables.
+- Look for the request with a name like "Set your oAuth 2.0 Token in Authorization tab"
+- Don't try to do a bunch of manual work on your token setup or get fancy as it's all filled in for you already using variables.
 
 Just follow these steps which will also be provided during an oAuth error state in Postman's __Console__ as errors:
 
