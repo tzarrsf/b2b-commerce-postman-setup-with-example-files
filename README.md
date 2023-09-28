@@ -47,7 +47,25 @@ You can see the [Omnichannel Inventory Postman Setup repository here](https://gi
 
 You will need to obtain some values from your Connected App in order to establish connectivity (see: [Variables](./#Variables))
 
-## oAuth 2.0 is set __once__ in each folder
+## Authentication Approaches
+
+Authentication is generally handled one of three ways:
+
+1. Logging in as an administrator (often used in the request chain's outset for lookups)
+2. Logging in as a 'known good' Buyer (aka Contact under Account with a User - all three must be set up and this is commonly _not_ going to be the case with a System Administrator account)
+3. Establishing oAuth 2.0 *once per folder* and then having subsequent requests set to Bearer Token in the "Authorization" tab
+
+### Logging in as an Administrator or Buyer () 
+
+This is handled inline. Just supply the environment with the needed variables like these and the collection ans scripting should take care of the rest for you:
+
+| `orgLoginUrl` | Either `https://login.salesforce.com` (production/trial) or `https://test.salesforce.com` (sandbox) | User supplied |
+| `orgHost` | Protocol and host portion of the Salesforce org's URL | User supplied. Example: `https://yourusername-august.lightning.force.com` |
+| `orgAdminUsername` | The System Administrator username for the Salesforce org | User supplied |
+| `orgAdminPassword` | The System Administrator password for the Salesforce org | User supplied |
+| `orgAdminSecurityToken` | The security token for the Salesforce Org System Administrator User | User supplied |
+
+### oAuth 2.0 is set __once__ in each folder
 
 Please don't take a "do-it-yourself" approach here. Why?
 
