@@ -1,4 +1,4 @@
-# Salesforce B2B Commerce Postman Setup
+# Salesforce B2B Commerce Postman Setup for Partners
 
 Created by Tom Zarr with key contributions from Sandra Golden and others
 
@@ -20,8 +20,8 @@ This collection is intended to be used for a B2B standalone setup. That isn't to
 
 ## Approach
 
-1. I've tried to stay "close to the metal" by using the Postman Scripting API directly. There are a few cases where this just isn't possible or realistic because things are not true JSON or HTTP status codes are reported in the HTML body text, but those should be true exceptions and definitely not the rule.
-2. I wanted oAuth 2.0 to not be a headache. This is my approach and it's about the best I could come up with given the limitations of the tool. Have a request where you set it once and then everything followiung just uses Bearer Token. It works and better is the enemy of good enough.
+1. I've tried to stay "close to the metal" by using the Postman Scripting API directly. There are a few cases where this just isn't possible or realistic because responses are not true JSON or HTTP status codes are reported in the HTML body text, but those should be true exceptions and definitely not the rule.
+2. I wanted oAuth 2.0 to not be a headache. This is my approach and it's about the best I could come up with given the limitations of the tool. Have a request where you set it once and then everything following just uses Bearer Token. It works and better is the enemy of good enough.
 3. The request chains are long; This is by design. At the risk of being didactic, this is ultimately a *teaching tool*. When it comes to working with APIs I find more detail is better.
 4. Collection variables are calculated and presented before each request.
 5. Tests are applied following each response. If something isn't right I want you to know about it early so I assume little to nothing that a response is successful.
@@ -120,7 +120,7 @@ These are good examples as they adhere to the established naming convention and 
 3. `pm.environment.set('myVariable', 'My new values');`
 4. `pm.environment.get('myVariable');`
 
-Philosophically speaking, I don't like mixing which dictionary I get a value from. A value with an underscroe prefix in this naming convention should correspond to pm.collectionVariables and one without should come from (or be written to) pm.environment. I don't use a context stand-on object or variable that would allow pulling the value from either pm.collectionVariables or pm.environment. I believe quite strongly in the single definition principal and not coding by coincidence. If those terms are not familiar to you I'd recommend the book "The Pragmattic Programmer" as it could replace many on your shelf.
+Philosophically speaking, I don't like mixing which dictionary I get a value from. A value with an underscore prefix in this naming convention should correspond to pm.collectionVariables and one without should come from (or be written to) pm.environment. I don't use a context stand-on object or variable that would allow pulling the value from either pm.collectionVariables or pm.environment. I believe quite strongly in the single definition principal and not coding by coincidence - even with tests. If those terms are not familiar to you I'd recommend the book "The Pragmatic Programmer" as it could replace many on your shelf (or device).
 
 ### Input values
 
