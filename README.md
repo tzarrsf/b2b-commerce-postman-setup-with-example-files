@@ -43,7 +43,7 @@ By way of example the Omnichannel Inventory Postman Collection used two Connecte
 - Postman_OCI
 - Postman_OCI_ConnectApi
 
-See [repository here](https://github.com/tzarrsf/omnichannel-inventory-postman-setup-with-example-files/)
+You can see the [Omnichannel Inventory Postman Setup repository here](https://github.com/tzarrsf/omnichannel-inventory-postman-setup-with-example-files/)
 
 You will need to obtain some values from your Connected App in order to establish connectivity (see: [Variables](./#Variables))
 
