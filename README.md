@@ -47,37 +47,37 @@ You can see the [Omnichannel Inventory Postman Setup repository here](https://gi
 
 You will need to obtain some values from your Connected App in order to establish connectivity (see: [Variables](./#Variables))
 
-## Authentication Approaches
+## Authentication Approach
 
 Authentication is generally handled one of three ways:
 
-1. Logging in as an administrator (often used in the request chain's outset for lookups)
+1. Logging in as an administrator (often used in the request chain's outset for lookup operations to make things reusable across orgs)
 2. Logging in as a 'known good' Buyer (aka Contact under Account with a User - all three must be set up and this is commonly _not_ going to be the case with a System Administrator account)
-3. Establishing oAuth 2.0 *once per folder* and then having subsequent requests set to Bearer Token in the "Authorization" tab
+3. Establishing oAuth 2.0 *once per folder* and then having subsequent requests set to Bearer Token in the "Authorization" tab (see [ oAuth 2.0 is set __once__ in each folder](./# oAuth 2.0 is set __once__ in each folder)
 
-### Logging in as an Administrator or Buyer () 
+### Logging in as an Administrator or Buyer
 
-This is handled inline. Just supply the environment with the needed variables like these and the collection ans scripting should take care of the rest for you:
+This is handled inline. Just supply the environment with the needed variables like these and the collection and scripting should take care of the rest for you:
 
-| Name | Description | Location |
-| --- | --- | --- |
-| `orgLoginUrl` | Either `https://login.salesforce.com` (production/trial) or `https://test.salesforce.com` (sandbox) | User supplied |
-| `orgHost` | Protocol and host portion of the Salesforce org's URL | User supplied. Example: `https://yourusername-august.lightning.force.com` |
-| `orgAdminUsername` | The System Administrator username for the Salesforce org | User supplied |
-| `orgAdminPassword` | The System Administrator password for the Salesforce org | User supplied |
-| `orgAdminSecurityToken` | The security token for the Salesforce Org System Administrator User | User supplied |
+| Name | Description
+| --- | --- |
+| `orgLoginUrl` | Either `https://login.salesforce.com` (production / trial) or `https://test.salesforce.com` (sandbox)
+| `orgHost` | Protocol and host portion of the Salesforce org's URL Example: `https://yourusername-august.lightning.force.com` |
+| `orgAdminUsername` | The System Administrator username for the Salesforce org |
+| `orgAdminPassword` | The System Administrator password for the Salesforce org |
+| `orgAdminSecurityToken` | The security token for the Salesforce Org System Administrator User |
 
-### oAuth 2.0 is set __once__ in each folder
+### oAuth 2.0 is set once per folder where needed
 
 Please don't take a "do-it-yourself" approach here. Why?
 
 1. Most importantly, you don't need to.
 2. There's some scripting which checks if your token set up is correct to begin making requests.
 3. Tokens are passed in subsequent requests using __Bearer Token__ authentication on the requests needing it.
-4. This was done "by design" so you can easily add your own requests or copy them and move them around with little to no impact when oAuth is needed.
-5. You can also find and copy the requests named something like "Set your oAuth 2.0 Token in Authorization tab" whenever you need to establish oAuth 2.0 before another request.
+4. This was done "by design" so you can easily add your own requests or copy them and move them around with little to no impact whenever oAuth is needed.
+5. You can also find and copy the requests named something like "Set your oAuth 2.0 Token in Authorization tab" whenever you need to establish oAuth 2.0 before another request or add it to a folder (regular copy paste operations of these objects is supported in Postman).
 
-### Key points
+#### Establishing oAuth 2.0 (First Time and Details)
 
 A. Look for the request with a name like "Set your oAuth 2.0 Token in Authorization tab"
 B. Don't try to do a bunch of manual work on your token setup or get fancy as it's all filled in for you already using variables.
