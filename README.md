@@ -6,8 +6,6 @@ This postman collection contains API endpoints from various Salesforce Commerce 
 
 Unlike many other Postman collections, this one is meant to be user friendly and have meaningful error messages when something is not set up correctly or there are issues in the request chains.
 
-This collection supports the Partner Learning Camp courses for B2B Commerce where you can find all the needed steps for setting up your environment.
-
 ## ⚠️ Disclaimers
 
 - This collection is provided as-is. It's not officially supported by Salesforce or covered by SLAs.
@@ -76,7 +74,7 @@ Just follow these steps which will also be provided during an oAuth error state 
 
 ## Variables
 
-__Note__: You must set up your environment variables correctly for this all to work. Collection variables will be calculated between requests and used in subsequent  requests. The naming convention used in the collection is to prefix with an underscore for collection variables.
+⚠️ __Note__: You must set up your environment variables correctly for this all to work. Collection variables will be calculated between requests and used in subsequent  requests. The naming convention used in the collection is to prefix with an underscore for collection variables.
 
 ### Environment variables can be used to provide comma delimited values for these values
 
@@ -91,7 +89,7 @@ __Note__: You must set up your environment variables correctly for this all to w
 
 ### Standardized variables (also documented in the Postman collection)
 
-⚠️ **_Note_**: The naming convention found here is used across other Salesforce Commerce product Postman collections in the Partner Readiness space when possible to support reuse and collaboration.
+⚠️ __Note__: The naming convention found here is used across other Salesforce Commerce product Postman collections in the Partner Readiness space when possible to support reuse and collaboration.
 
 This Postman collection relies on the following variables:
 
