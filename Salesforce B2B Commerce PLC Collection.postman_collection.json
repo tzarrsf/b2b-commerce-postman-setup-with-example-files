@@ -1626,7 +1626,7 @@
 							"response": []
 						},
 						{
-							"name": "4. Set Account Id",
+							"name": "4. Set Effective Account Id",
 							"event": [
 								{
 									"listen": "test",
@@ -2011,7 +2011,7 @@
 											"});\r",
 											"\r",
 											"// Expected strings in collection  variables\r",
-											"['_webStoreId', '_token', '_orgId'].forEach(esicv => {\r",
+											"['_instanceUrl', '_webStoreId', '_token', '_orgId'].forEach(esicv => {\r",
 											"    if(!pm.collectionVariables.has(esicv)) {\r",
 											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
 											"        pm.expect.fail(msg);\r",
@@ -2131,7 +2131,7 @@
 											"});\r",
 											"\r",
 											"// Expected strings in collection variables\r",
-											"['_webStoreId', '_productId', '_token'].forEach(esicv => {\r",
+											"['_instanceUrl', '_webStoreId', '_productId', '_token', '_effectiveAccountId'].forEach(esicv => {\r",
 											"    if(!pm.collectionVariables.has(esicv)) {\r",
 											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
 											"        pm.expect.fail(msg);\r",
@@ -2235,6 +2235,108 @@
 							"response": []
 						},
 						{
+							"name": "8a. Create Cart",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
+											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
+											"\r",
+											"// Expected strings in environment variables\r",
+											"['orgHostMySalesforceFormat','apiVersion'].forEach(esiev => {\r",
+											"    if(!pm.environment.has(esiev)) {\r",
+											"        const msg = 'Expected Postman environment variable not found: ' + esiev;\r",
+											"        pm.expect.fail(msg);\r",
+											"    }\r",
+											"    pm.expect(pm.environment.get(esiev)).to.exist;\r",
+											"    pm.expect(pm.environment.get(esiev)).to.be.an('string');\r",
+											"});\r",
+											"\r",
+											"// Expected strings in collection variables\r",
+											"['_webStoreId', '_productId', '_token', '_instanceUrl'].forEach(esicv => {\r",
+											"    if(!pm.collectionVariables.has(esicv)) {\r",
+											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
+											"        pm.expect.fail(msg);\r",
+											"    }\r",
+											"    pm.expect(pm.collectionVariables.get(esicv)).to.exist;\r",
+											"    pm.expect(pm.collectionVariables.get(esicv)).to.be.an('string');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"console.log(`${pm.info.requestName} Tests...`);\r",
+											"\r",
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test('Response is valid and has a JSON body', () => {\r",
+											"    pm.response.to.be.success;\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"pm.test('Validate the response contains a cart Id and set the collection variables', () => {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    const cartId = jsonData.cartId;\r",
+											"    console.log('CART ID: ' + cartId);\r",
+											"    pm.expect(jsonData.cartId).to.exist;\r",
+											"    pm.expect(jsonData.cartId).to.be.an('string');\r",
+											"    pm.collectionVariables.set('_cartStateOrId', jsonData.cartId);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"name\":\"Postman Cart\",\r\n   \"type\":\"Cart\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/carts",
+									"host": [
+										"{{_instanceUrl}}"
+									],
+									"path": [
+										"services",
+										"data",
+										"v{{apiVersion}}",
+										"commerce",
+										"webstores",
+										"{{_webStoreId}}",
+										"carts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "9. Get Active Cart",
 							"event": [
 								{
@@ -2257,7 +2359,7 @@
 											"});\r",
 											"\r",
 											"// Expected strings in collection variables\r",
-											"['_webStoreId', '_productId', '_token', '_cartStateOrId'].forEach(esicv => {\r",
+											"['_instanceUrl', '_webStoreId', '_productId', '_token', '_effectiveAccountId', '_cartStateOrId'].forEach(esicv => {\r",
 											"    if(!pm.collectionVariables.has(esicv)) {\r",
 											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
 											"        pm.expect.fail(msg);\r",
@@ -2287,6 +2389,7 @@
 											"\r",
 											"pm.test('Validate the response contains a cart Id and set the collection variables', () => {\r",
 											"    const jsonData = pm.response.json();\r",
+											"    console.warn(jsonData);\r",
 											"    pm.expect(jsonData.cartId).to.exist;\r",
 											"    pm.expect(jsonData.cartId).to.be.an('string');\r",
 											"    pm.collectionVariables.set('_cartStateOrId', jsonData.cartId);\r",
@@ -4129,7 +4232,7 @@
 			"name": "Checkout",
 			"item": [
 				{
-					"name": "Authenticated Happy Path - DRAFT",
+					"name": "Authenticated Happy Path - WIP",
 					"item": [
 						{
 							"name": "1. Clear Collection Variables",
@@ -4138,7 +4241,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('1. Clear Collection Variables Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"\r",
 											"// Check for environment selection\r",
 											"if(pm.environment.name === undefined) {\r",
@@ -4156,7 +4259,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"console.log('1. Clear Collection Variables Tests...');\r",
+											"console.log(`${pm.info.requestName} Tests...`);\r",
 											"\r",
 											"pm.test('Make sure collection variables are clean', () => {\r",
 											"    pm.expect(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value)).to.be.an('array').empty;\r",
@@ -4189,7 +4292,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"console.log('2. Log in as System Administrator Tests...');\r",
+											"console.log(`${pm.info.requestName} Tests...`);\r",
 											"\r",
 											"pm.test('Status code is 200', () => {\r",
 											"    pm.response.to.have.status(200);\r",
@@ -4215,7 +4318,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('2. Log in as System Administrator Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
@@ -4274,13 +4377,13 @@
 							"response": []
 						},
 						{
-							"name": "3. Set WebStoreId",
+							"name": "3. Set WebStoreId Copy",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"console.log('3. Set WebStoreId Tests...');\r",
+											"console.log(`${pm.info.requestName} Tests...`);\r",
 											"\r",
 											"pm.test('Status code is 200', () => {\r",
 											"    pm.response.to.have.status(200);\r",
@@ -4310,13 +4413,13 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('3. Set WebStoreId Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
 											"['orgLoginUrl','apiVersion', 'webStoreName'].forEach(esiev => {\r",
 											"    if(!pm.environment.has(esiev)) {\r",
-											"       const msg = 'Expected Postman environment variable not found: ' + esiev;\r",
+											"        const msg = 'Expected Postman environment variable not found: ' + esiev;\r",
 											"        pm.expect.fail(msg);\r",
 											"    }\r",
 											"    pm.expect(pm.environment.get(esiev)).to.exist;\r",
@@ -4325,7 +4428,7 @@
 											"\r",
 											"// Expected strings in collection variables\r",
 											"['_instanceUrl'].forEach(esicv => {\r",
-											"    if(pm.collectionVariables.get(esicv) === undefined) {\r",
+											"    if(!pm.collectionVariables.has(esicv)) {\r",
 											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
 											"        pm.expect.fail(msg);\r",
 											"    }\r",
@@ -4373,13 +4476,221 @@
 							"response": []
 						},
 						{
-							"name": "4. Login as Buyer (SOAP)",
+							"name": "4. Set Account Id Copy",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"console.log('3. Login as Buyer (SOAP) Tests...');",
+											"console.log(`${pm.info.requestName} Tests...`);\r",
+											"\r",
+											"pm.test('Status code is 200', () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('Response is valid and has a JSON body', () => {\r",
+											"     pm.response.to.be.success;\r",
+											"     pm.response.to.be.withBody;\r",
+											"     pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"pm.test('Validate the response and saves the WebStore Id in the collection variables', () => {\r",
+											"    const data = pm.response.json();\r",
+											"    pm.expect(data.records).to.exist;\r",
+											"    pm.expect(data.records).to.be.an('array');\r",
+											"    pm.expect(data.records.length).to.eql(1);\r",
+											"    const account = data.records[0];\r",
+											"    pm.expect(account.Id).to.exist;\r",
+											"    pm.expect(account.Id).to.be.an('string');\r",
+											"    pm.collectionVariables.set('_effectiveAccountId', account.Id);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
+											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
+											"\r",
+											"// Expected strings in environment variables\r",
+											"['orgLoginUrl','apiVersion', 'webStoreName', 'buyerAccountName'].forEach(esiev => {\r",
+											"    if(!pm.environment.has(esiev)) {\r",
+											"        const msg = 'Expected Postman environment variable not found: ' + esiev;\r",
+											"        pm.expect.fail(msg);\r",
+											"    }\r",
+											"    pm.expect(pm.environment.get(esiev)).to.exist;\r",
+											"    pm.expect(pm.environment.get(esiev)).to.be.an('string');\r",
+											"});\r",
+											"\r",
+											"// Expected strings in collection variables\r",
+											"['_instanceUrl'].forEach(esicv => {\r",
+											"    if(!pm.collectionVariables.has(esicv)) {\r",
+											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
+											"        pm.expect.fail(msg);\r",
+											"    }\r",
+											"    pm.expect(pm.collectionVariables.get(esicv)).to.exist;\r",
+											"    pm.expect(pm.collectionVariables.get(esicv)).to.be.an('string');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/query/?q=SELECT+Id,+Name+FROM+Account+WHERE+Name+=+'{{buyerAccountName}}'",
+									"host": [
+										"{{_instanceUrl}}"
+									],
+									"path": [
+										"services",
+										"data",
+										"v{{apiVersion}}",
+										"query",
+										""
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "SELECT+Id,+Name+FROM+Account+WHERE+Name+=+'{{buyerAccountName}}'"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "5. Set Product Ids Copy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"console.log(`${pm.info.requestName} Tests...`);\r",
+											"\r",
+											"pm.test('Status code is 200', () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('Response is valid and has a JSON body', () => {\r",
+											"     pm.response.to.be.success;\r",
+											"     pm.response.to.be.withBody;\r",
+											"     pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"pm.test('Validate the response and save the Product Ids in the collection variables', () => {\r",
+											"    const data = pm.response.json();\r",
+											"    pm.expect(data.records).to.exist;\r",
+											"    pm.expect(data.records).to.be.an('array');\r",
+											"    pm.expect(data.records.length).greaterThan(1);\r",
+											"    \r",
+											"    const productIds = [];\r",
+											"    data.records.forEach(p => {\r",
+											"        productIds.push(p.Id);\r",
+											"    });\r",
+											"    \r",
+											"    console.log('# of Product Ids: ' + productIds.length + ' Details:\\r\\n' + productIds.join(',\\r\\n'));\r",
+											"    pm.collectionVariables.set('_productIds', JSON.stringify(productIds));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
+											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
+											"\r",
+											"// Expected strings in environment variables\r",
+											"['orgLoginUrl','apiVersion', 'webStoreName', 'buyerAccountName', 'productNamesCommaDelimited'].forEach(esiev => {\r",
+											"    if(!pm.environment.has(esiev)) {\r",
+											"        const msg = 'Expected Postman environment variable not found: ' + esiev;\r",
+											"        pm.expect.fail(msg);\r",
+											"    }\r",
+											"    pm.expect(pm.environment.get(esiev)).to.exist;\r",
+											"    pm.expect(pm.environment.get(esiev)).to.be.an('string');\r",
+											"});\r",
+											"\r",
+											"// Expected strings in collection variables\r",
+											"['_instanceUrl'].forEach(esicv => {\r",
+											"    if(!pm.collectionVariables.has(esicv)) {\r",
+											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
+											"        pm.expect.fail(msg);\r",
+											"    }\r",
+											"    pm.expect(pm.collectionVariables.get(esicv)).to.exist;\r",
+											"    pm.expect(pm.collectionVariables.get(esicv)).to.be.an('string');\r",
+											"});\r",
+											"\r",
+											"console.log('Parsing and assigning productNames...');\r",
+											"const productNamesCommaDelimited = pm.environment.get('productNamesCommaDelimited');\r",
+											"const productNamesArray = productNamesCommaDelimited.split(',');\r",
+											"console.log('# of Product Names: ' + productNamesArray.length + ' Details:\\r\\n' + productNamesArray.join(',\\r\\n'));\r",
+											"pm.collectionVariables.set('_productNames', '\\'' + productNamesArray.join('\\',\\'') + '\\'');"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/query/?q=SELECT+Id,+Name+FROM+Product2+WHERE+Name+in(+{{_productNames}})",
+									"host": [
+										"{{_instanceUrl}}"
+									],
+									"path": [
+										"services",
+										"data",
+										"v{{apiVersion}}",
+										"query",
+										""
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "SELECT+Id,+Name+FROM+Product2+WHERE+Name+in(+{{_productNames}})"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "6. Login as Buyer (SOAP)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"console.log(`${pm.info.requestName} Tests...`);",
 											"",
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200);",
@@ -4406,7 +4717,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('3. Login as Buyer (SOAP) Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
@@ -4477,13 +4788,13 @@
 							"response": []
 						},
 						{
-							"name": "5. Search for Products Copy",
+							"name": "7. Search for Products",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"console.log('5. Search for Products Tests...');",
+											"console.log(`${pm.info.requestName} Tests...`);",
 											"",
 											"pm.test(\"Status code is 201\", function () {",
 											"    pm.response.to.have.status(201);",
@@ -4508,7 +4819,14 @@
 											"    pm.collectionVariables.set('_productId', jsonData.productsPage.products[0].id);",
 											"});",
 											"",
-											""
+											"// Remove the productId from the collection looked up as Administrator in \"Set Product Ids\" to avoid adding more of the same in \"Add multiple Products to Cart\"",
+											"const productIdFromSearch = pm.collectionVariables.get('_productId');",
+											"const productIds = pm.collectionVariables.get('_productIds');",
+											"const index = productIds.indexOf(productIdFromSearch);",
+											"if (index > -1) { // only splice when element found",
+											"  productIds.splice(index, 1); // remove only one item",
+											"}",
+											"pm.collectionVariables.set('_productIds', productIds);"
 										],
 										"type": "text/javascript"
 									}
@@ -4517,7 +4835,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('5. Search for Products Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
@@ -4575,9 +4893,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{orgHostMySalesforceFormat}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/search/product-search",
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/search/product-search",
 									"host": [
-										"{{orgHostMySalesforceFormat}}"
+										"{{_instanceUrl}}"
 									],
 									"path": [
 										"services",
@@ -4595,13 +4913,13 @@
 							"response": []
 						},
 						{
-							"name": "6. Get Product Detail",
+							"name": "8. Get Product Detail",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"console.log('6. Get Product Detail Tests...');",
+											"console.log(`${pm.info.requestName} Tests...`);",
 											"",
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200);",
@@ -4638,7 +4956,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('6. Get Product Detail Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
@@ -4679,9 +4997,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{orgHostMySalesforceFormat}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/products/{{_productId}}",
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/products/{{_productId}}",
 									"host": [
-										"{{orgHostMySalesforceFormat}}"
+										"{{_instanceUrl}}"
 									],
 									"path": [
 										"services",
@@ -4756,13 +5074,13 @@
 							"response": []
 						},
 						{
-							"name": "7. Get Active Cart",
+							"name": "9. Get Active Cart",
 							"event": [
 								{
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('7. Get Active Cart Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"pm.collectionVariables.set('_cartStateOrId', 'active');\r",
@@ -4794,7 +5112,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"console.log('7. Get Active Cart Tests...');\r",
+											"console.log(`${pm.info.requestName} Tests...`);\r",
 											"\r",
 											"pm.test(\"Status code is 200\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
@@ -4831,9 +5149,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{orgHostMySalesforceFormat}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/carts/{{_cartStateOrId}}",
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/carts/{{_cartStateOrId}}",
 									"host": [
-										"{{orgHostMySalesforceFormat}}"
+										"{{_instanceUrl}}"
 									],
 									"path": [
 										"services",
@@ -4844,215 +5162,6 @@
 										"{{_webStoreId}}",
 										"carts",
 										"{{_cartStateOrId}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "8. Delete Cart (demonstration purposes) - Draft",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"console.log('8. Delete Cart Pre-request Script...');\r",
-											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
-											"\r",
-											"// Expected strings in environment variables\r",
-											"['orgHostMySalesforceFormat','apiVersion'].forEach(esiev => {\r",
-											"    if(!pm.environment.has(esiev)) {\r",
-											"        const msg = 'Expected Postman environment variable not found: ' + esiev;\r",
-											"        pm.expect.fail(msg);\r",
-											"    }\r",
-											"    pm.expect(pm.environment.get(esiev)).to.exist;\r",
-											"    pm.expect(pm.environment.get(esiev)).to.be.an('string');\r",
-											"});\r",
-											"\r",
-											"// Expected strings in collection variables\r",
-											"['_webStoreId', '_productId', '_token','_cartStateOrId'].forEach(esicv => {\r",
-											"    if(!pm.collectionVariables.has(esicv)) {\r",
-											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
-											"        pm.expect.fail(msg);\r",
-											"    }\r",
-											"    pm.expect(pm.collectionVariables.get(esicv)).to.exist;\r",
-											"    pm.expect(pm.collectionVariables.get(esicv)).to.be.an('string');\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"console.log('8. Delete Cart Tests...');\r",
-											"\r",
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"\r",
-											"pm.test('Response is valid and has a JSON body', () => {\r",
-											"    pm.response.to.be.success;\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.collectionVariables.set('_cartId', undefined);\r",
-											"\r",
-											"/*\r",
-											"pm.test('Validate the response', () => {\r",
-											"    const jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.defaultImage).to.exist;\r",
-											"    pm.expect(jsonData.defaultImage).to.be.an('object').with.property('id').to.be.an('string');\r",
-											"\r",
-											"    pm.expect(jsonData.fields).to.exist;\r",
-											"    pm.expect(jsonData.fields).to.be.an('object').with.property('Name').to.be.an('string');\r",
-											"    pm.expect(jsonData.fields).to.be.an('object').with.property('Description').to.be.an('string');\r",
-											"    pm.expect(jsonData.fields).to.be.an('object').with.property('LastModifiedDate').to.match(/\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z/);\r",
-											"    \r",
-											"    pm.expect(jsonData.mediaGroups).to.exist;\r",
-											"    pm.expect(jsonData.mediaGroups).to.be.an('array');\r",
-											"    pm.expect(jsonData.mediaGroups[0]).to.be.an('object').with.property('id').to.be.an('string');\r",
-											"    pm.expect(jsonData.mediaGroups[0].mediaItems[0]).to.be.an('object').with.property('url').to.be.an('string');\r",
-											"    pm.expect(jsonData.mediaGroups[0].mediaItems[0]).to.be.an('object').with.property('mediaType').to.be.an('string');\r",
-											"});\r",
-											"*/\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{_token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{orgHostMySalesforceFormat}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/carts/{{_cartStateOrId}}",
-									"host": [
-										"{{orgHostMySalesforceFormat}}"
-									],
-									"path": [
-										"services",
-										"data",
-										"v{{apiVersion}}",
-										"commerce",
-										"webstores",
-										"{{_webStoreId}}",
-										"carts",
-										"{{_cartStateOrId}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "9. Create Cart (demonstration purposes) - Draft",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"console.log('9. Create Cart Pre-request Script...');\r",
-											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
-											"\r",
-											"// Expected strings in environment variables\r",
-											"['orgHostMySalesforceFormat','apiVersion'].forEach(esiev => {\r",
-											"    if(!pm.environment.has(esiev)) {\r",
-											"        const msg = 'Expected Postman environment variable not found: ' + esiev;\r",
-											"        pm.expect.fail(msg);\r",
-											"    }\r",
-											"    pm.expect(pm.environment.get(esiev)).to.exist;\r",
-											"    pm.expect(pm.environment.get(esiev)).to.be.an('string');\r",
-											"});\r",
-											"\r",
-											"// Expected strings in collection variables\r",
-											"['_webStoreId', '_token'].forEach(esicv => {\r",
-											"    if(!pm.collectionVariables.has(esicv)) {\r",
-											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
-											"        pm.expect.fail(msg);\r",
-											"    }\r",
-											"    pm.expect(pm.collectionVariables.get(esicv)).to.exist;\r",
-											"    pm.expect(pm.collectionVariables.get(esicv)).to.be.an('string');\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"console.log('9. Create Cart Tests...');\r",
-											"\r",
-											"pm.test(\"Status code is 201\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"});\r",
-											"\r",
-											"pm.test('Response is valid and has a JSON body', () => {\r",
-											"    pm.response.to.be.success;\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test('Validate the response contains a cart Id and set the collection variables', () => {\r",
-											"    const jsonData = pm.response.json();\r",
-											"    const cartId = jsonData.cartId;\r",
-											"    console.log('CART ID: ' + cartId);\r",
-											"    pm.expect(jsonData.cartId).to.exist;\r",
-											"    pm.expect(jsonData.cartId).to.be.an('string');\r",
-											"    pm.collectionVariables.set('_cartStateOrId', jsonData.cartId);\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{_token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n   \"name\":\"Postman Cart\",\r\n   \"type\":\"Cart\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{orgHostMySalesforceFormat}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/carts",
-									"host": [
-										"{{orgHostMySalesforceFormat}}"
-									],
-									"path": [
-										"services",
-										"data",
-										"v{{apiVersion}}",
-										"commerce",
-										"webstores",
-										"{{_webStoreId}}",
-										"carts"
 									]
 								}
 							},
@@ -5065,7 +5174,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('10. Add single Product to Cart Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
@@ -5078,8 +5187,10 @@
 											"    pm.expect(pm.environment.get(esiev)).to.be.an('string');\r",
 											"});\r",
 											"\r",
+											"console.info(pm.collectionVariables.get('_cartStateOrId'));\r",
+											"\r",
 											"// Expected strings in collection variables\r",
-											"['_webStoreId', '_token', '_cartStateOrId'].forEach(esicv => {\r",
+											"['_instanceUrl', '_webStoreId', '_productId', '_token', '_cartStateOrId', '_effectiveAccountId'].forEach(esicv => {\r",
 											"    if(!pm.collectionVariables.has(esicv)) {\r",
 											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
 											"        pm.expect.fail(msg);\r",
@@ -5095,10 +5206,10 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"console.log('10. Add single Product to Cart Tests...');\r",
+											"console.log(`${pm.info.requestName} Tests...`);\r",
 											"\r",
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
+											"pm.test(\"Status code is 201 or 200\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([201, 200]);\r",
 											"});\r",
 											"\r",
 											"pm.test('Response is valid and has a JSON body', () => {\r",
@@ -5109,21 +5220,9 @@
 											"\r",
 											"pm.test('Validate the response', () => {\r",
 											"    const jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.defaultImage).to.exist;\r",
-											"    pm.expect(jsonData.defaultImage).to.be.an('object').with.property('id').to.be.an('string');\r",
-											"\r",
-											"    pm.expect(jsonData.fields).to.exist;\r",
-											"    pm.expect(jsonData.fields).to.be.an('object').with.property('Name').to.be.an('string');\r",
-											"    pm.expect(jsonData.fields).to.be.an('object').with.property('Description').to.be.an('string');\r",
-											"    pm.expect(jsonData.fields).to.be.an('object').with.property('LastModifiedDate').to.match(/\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z/);\r",
-											"    \r",
-											"    pm.expect(jsonData.mediaGroups).to.exist;\r",
-											"    pm.expect(jsonData.mediaGroups).to.be.an('array');\r",
-											"    pm.expect(jsonData.mediaGroups[0]).to.be.an('object').with.property('id').to.be.an('string');\r",
-											"    pm.expect(jsonData.mediaGroups[0].mediaItems[0]).to.be.an('object').with.property('url').to.be.an('string');\r",
-											"    pm.expect(jsonData.mediaGroups[0].mediaItems[0]).to.be.an('object').with.property('mediaType').to.be.an('string');\r",
-											"});\r",
-											""
+											"    pm.expect(jsonData.cartItemId).to.exist;\r",
+											"    pm.expect(jsonData.cartItemId).to.be.a.string;\r",
+											"});"
 										],
 										"type": "text/javascript"
 									}
@@ -5152,9 +5251,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{orgHostMySalesforceFormat}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webstoreId}}/carts/{{_cartStateOrId}}/cart-items",
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/carts/{{_cartStateOrId}}/cart-items?effectiveAccountId={{_effectiveAccountId}}",
 									"host": [
-										"{{orgHostMySalesforceFormat}}"
+										"{{_instanceUrl}}"
 									],
 									"path": [
 										"services",
@@ -5162,10 +5261,16 @@
 										"v{{apiVersion}}",
 										"commerce",
 										"webstores",
-										"{{_webstoreId}}",
+										"{{_webStoreId}}",
 										"carts",
 										"{{_cartStateOrId}}",
 										"cart-items"
+									],
+									"query": [
+										{
+											"key": "effectiveAccountId",
+											"value": "{{_effectiveAccountId}}"
+										}
 									]
 								}
 							},
@@ -5178,13 +5283,14 @@
 									"listen": "test",
 									"script": {
 										"exec": [
+											"console.log(`${pm.info.requestName} Tests...`);",
+											"",
 											"pm.test(\"Status code is 202\", function () {",
 											"    pm.response.to.have.status(202);",
 											"});",
 											"",
 											"let checkoutId = pm.response.json().checkoutId;",
-											"const context = pm.environment.name ? pm.environment : pm.collectionVariables;",
-											"context.set('_checkoutId', checkoutId);",
+											"pm.collectionVariables.set('_checkoutId', checkoutId);",
 											""
 										],
 										"type": "text/javascript"
@@ -5194,7 +5300,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('10. Add single Product to Cart Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
@@ -5208,7 +5314,7 @@
 											"});\r",
 											"\r",
 											"// Expected strings in collection variables\r",
-											"['_webStoreId', '_token', '_cartStateOrId'].forEach(esicv => {\r",
+											"['_instanceUrl', '_webStoreId', '_token', '_cartStateOrId'].forEach(esicv => {\r",
 											"    if(!pm.collectionVariables.has(esicv)) {\r",
 											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
 											"        pm.expect.fail(msg);\r",
@@ -5222,6 +5328,16 @@
 								}
 							],
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{_token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [
 									{
@@ -5231,7 +5347,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\"cartId\":\"{{_cartId}}\"}",
+									"raw": "{\"cartId\":\"{{_cartStateOrId}}\"}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5239,9 +5355,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{orgUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{webstoreId}}/checkouts/",
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/checkouts/",
 									"host": [
-										"{{orgUrl}}"
+										"{{_instanceUrl}}"
 									],
 									"path": [
 										"services",
@@ -5249,7 +5365,7 @@
 										"v{{apiVersion}}",
 										"commerce",
 										"webstores",
-										"{{webstoreId}}",
+										"{{_webStoreId}}",
 										"checkouts",
 										""
 									]
@@ -5265,14 +5381,15 @@
 									"listen": "test",
 									"script": {
 										"exec": [
+											"console.log(`${pm.info.requestName} Tests...`);",
+											"",
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200);",
 											"});",
 											"",
 											"const responseJson = pm.response.json();",
 											"const addressList = responseJson.items;",
-											"const context = pm.environment.name ? pm.environment : pm.collectionVariables;",
-											"context.set('_addressId', addressList[0].addressId);"
+											"pm.collectionVariables.set('_addressId', addressList[0].addressId);"
 										],
 										"type": "text/javascript"
 									}
@@ -5281,7 +5398,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('10. Add single Product to Cart Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
@@ -5295,7 +5412,7 @@
 											"});\r",
 											"\r",
 											"// Expected strings in collection variables\r",
-											"['_webStoreId', '_token', '_cartStateOrId'].forEach(esicv => {\r",
+											"['_checkoutId', '_webStoreId', '_token', '_cartStateOrId'].forEach(esicv => {\r",
 											"    if(!pm.collectionVariables.has(esicv)) {\r",
 											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
 											"        pm.expect.fail(msg);\r",
@@ -5312,6 +5429,16 @@
 								"disableBodyPruning": true
 							},
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{_token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "GET",
 								"header": [],
 								"body": {
@@ -5324,9 +5451,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{orgUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{webstoreId}}/accounts/{{buyerAccountId}}/addresses?addressType=Shipping&sortOrder=CreatedDateDesc&excludeUnsupportedCountries=true",
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/accounts/{{_effectiveAccountId}}/addresses?addressType=Shipping&sortOrder=CreatedDateDesc&excludeUnsupportedCountries=true",
 									"host": [
-										"{{orgUrl}}"
+										"{{_instanceUrl}}"
 									],
 									"path": [
 										"services",
@@ -5334,9 +5461,9 @@
 										"v{{apiVersion}}",
 										"commerce",
 										"webstores",
-										"{{webstoreId}}",
+										"{{_webStoreId}}",
 										"accounts",
-										"{{buyerAccountId}}",
+										"{{_effectiveAccountId}}",
 										"addresses"
 									],
 									"query": [
@@ -5365,13 +5492,14 @@
 									"listen": "test",
 									"script": {
 										"exec": [
+											"console.log(`${pm.info.requestName} Tests...`);",
+											"",
 											"pm.test(\"Status code is 201\", function () {",
 											"    pm.response.to.have.status(201);",
 											"});",
 											"",
 											"const responseJson = pm.response.json();",
-											"const context = pm.environment.name ? pm.environment : pm.collectionVariables;",
-											"context.set('_addressId', responseJson.addressId);"
+											"pm.collectionVariables.set('_addressId', responseJson.addressId);"
 										],
 										"type": "text/javascript"
 									}
@@ -5380,7 +5508,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('10. Add single Product to Cart Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
@@ -5394,7 +5522,7 @@
 											"});\r",
 											"\r",
 											"// Expected strings in collection variables\r",
-											"['_webStoreId', '_token', '_cartStateOrId'].forEach(esicv => {\r",
+											"['_addressId', '_webStoreId', '_token', '_cartStateOrId'].forEach(esicv => {\r",
 											"    if(!pm.collectionVariables.has(esicv)) {\r",
 											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
 											"        pm.expect.fail(msg);\r",
@@ -5408,6 +5536,16 @@
 								}
 							],
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{_token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [],
 								"body": {
@@ -5420,9 +5558,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{orgUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{webstoreId}}/accounts/{{buyerAccountId}}/addresses",
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/accounts/{{_effectiveAccountId}}/addresses",
 									"host": [
-										"{{orgUrl}}"
+										"{{_instanceUrl}}"
 									],
 									"path": [
 										"services",
@@ -5430,9 +5568,9 @@
 										"v{{apiVersion}}",
 										"commerce",
 										"webstores",
-										"{{webstoreId}}",
+										"{{_webStoreId}}",
 										"accounts",
-										"{{buyerAccountId}}",
+										"{{_effectiveAccountId}}",
 										"addresses"
 									]
 								},
@@ -5447,13 +5585,14 @@
 									"listen": "test",
 									"script": {
 										"exec": [
+											"console.log(`${pm.info.requestName} Tests...`);",
+											"",
 											"pm.test(\"Status code is 201\", function () {",
 											"    pm.response.to.have.status(201);",
 											"});",
 											"",
 											"const responseJson = pm.response.json();",
-											"const context = pm.environment.name ? pm.environment : pm.collectionVariables;",
-											"context.set('_addressId', responseJson.addressId);"
+											"pm.collectionVariables.set('_addressId', responseJson.addressId);"
 										],
 										"type": "text/javascript"
 									}
@@ -5462,7 +5601,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('10. Add single Product to Cart Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
@@ -5490,6 +5629,16 @@
 								}
 							],
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{_token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "PATCH",
 								"header": [],
 								"body": {
@@ -5502,9 +5651,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{orgUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{webstoreId}}/accounts/{{buyerAccountId}}/addresses/:addressId",
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/accounts/{{_effectiveAccountId}}/addresses/:addressId",
 									"host": [
-										"{{orgUrl}}"
+										"{{_instanceUrl}}"
 									],
 									"path": [
 										"services",
@@ -5512,9 +5661,9 @@
 										"v{{apiVersion}}",
 										"commerce",
 										"webstores",
-										"{{webstoreId}}",
+										"{{_webStoreId}}",
 										"accounts",
-										"{{buyerAccountId}}",
+										"{{_effectiveAccountId}}",
 										"addresses",
 										":addressId"
 									],
@@ -5536,6 +5685,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
+											"console.log(`${pm.info.requestName} Tests...`);",
+											"",
 											"pm.test(\"Status code is 202\", function () {",
 											"    pm.response.to.have.status(202);",
 											"});"
@@ -5547,7 +5698,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('10. Add single Product to Cart Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
@@ -5561,7 +5712,7 @@
 											"});\r",
 											"\r",
 											"// Expected strings in collection variables\r",
-											"['_webStoreId', '_token', '_cartStateOrId'].forEach(esicv => {\r",
+											"['_checkoutId', '_addressId', '_webStoreId', '_token', '_cartStateOrId'].forEach(esicv => {\r",
 											"    if(!pm.collectionVariables.has(esicv)) {\r",
 											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
 											"        pm.expect.fail(msg);\r",
@@ -5575,6 +5726,16 @@
 								}
 							],
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{_token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "PATCH",
 								"header": [
 									{
@@ -5592,9 +5753,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{orgUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{webstoreId}}/checkouts/:checkoutId",
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/checkouts/:checkoutId",
 									"host": [
-										"{{orgUrl}}"
+										"{{_instanceUrl}}"
 									],
 									"path": [
 										"services",
@@ -5602,7 +5763,7 @@
 										"v{{apiVersion}}",
 										"commerce",
 										"webstores",
-										"{{webstoreId}}",
+										"{{_webStoreId}}",
 										"checkouts",
 										":checkoutId"
 									],
@@ -5624,6 +5785,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
+											"console.log(`${pm.info.requestName} Tests...`);",
+											"",
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200);",
 											"});"
@@ -5635,7 +5798,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('10. Add single Product to Cart Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
@@ -5666,6 +5829,16 @@
 								"disableBodyPruning": true
 							},
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{_token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "GET",
 								"header": [
 									{
@@ -5683,9 +5856,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{orgUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{webstoreId}}/checkouts/:checkoutId",
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/checkouts/{{_checkoutId}}",
 									"host": [
-										"{{orgUrl}}"
+										"{{_instanceUrl}}"
 									],
 									"path": [
 										"services",
@@ -5693,15 +5866,9 @@
 										"v{{apiVersion}}",
 										"commerce",
 										"webstores",
-										"{{webstoreId}}",
+										"{{_webStoreId}}",
 										"checkouts",
-										":checkoutId"
-									],
-									"variable": [
-										{
-											"key": "checkoutId",
-											"value": "{{_checkoutId}}"
-										}
+										"{{_checkoutId}}"
 									]
 								},
 								"description": "Retrieves the checkout (variable __checkoutId_)."
@@ -5715,14 +5882,15 @@
 									"listen": "test",
 									"script": {
 										"exec": [
+											"console.log(`${pm.info.requestName} Tests...`);",
+											"",
 											"pm.test(\"Status code is 201\", function () {",
 											"    pm.response.to.have.status(201);",
 											"});",
 											"",
 											"const responseJson = pm.response.json();",
 											"let paymentToken = responseJson.token;",
-											"const context = pm.environment.name ? pm.environment : pm.collectionVariables;",
-											"context.set('_paymentToken', paymentToken);"
+											"pm.collectionVariables.set('_paymentToken', paymentToken);"
 										],
 										"type": "text/javascript"
 									}
@@ -5731,7 +5899,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('10. Add single Product to Cart Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
@@ -5759,6 +5927,16 @@
 								}
 							],
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{_token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [
 									{
@@ -5776,9 +5954,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{orgUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{webstoreId}}/payments/token",
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/payments/token",
 									"host": [
-										"{{orgUrl}}"
+										"{{_instanceUrl}}"
 									],
 									"path": [
 										"services",
@@ -5786,7 +5964,7 @@
 										"v{{apiVersion}}",
 										"commerce",
 										"webstores",
-										"{{webstoreId}}",
+										"{{_webStoreId}}",
 										"payments",
 										"token"
 									]
@@ -5802,6 +5980,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
+											"console.log(`${pm.info.requestName} Tests...`);",
+											"",
 											"pm.test(\"Status code is 201\", function () {",
 											"    pm.response.to.have.status(201);",
 											"});"
@@ -5813,7 +5993,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('10. Add single Product to Cart Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
@@ -5827,7 +6007,7 @@
 											"});\r",
 											"\r",
 											"// Expected strings in collection variables\r",
-											"['_webStoreId', '_token', '_cartStateOrId'].forEach(esicv => {\r",
+											"['_paymentToken', '_webStoreId', '_token', '_cartStateOrId'].forEach(esicv => {\r",
 											"    if(!pm.collectionVariables.has(esicv)) {\r",
 											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
 											"        pm.expect.fail(msg);\r",
@@ -5841,6 +6021,16 @@
 								}
 							],
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{_token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [
 									{
@@ -5858,9 +6048,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{orgUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{webstoreId}}/checkouts/:checkoutId/payments",
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/checkouts/:checkoutId/payments",
 									"host": [
-										"{{orgUrl}}"
+										"{{_instanceUrl}}"
 									],
 									"path": [
 										"services",
@@ -5868,7 +6058,7 @@
 										"v{{apiVersion}}",
 										"commerce",
 										"webstores",
-										"{{webstoreId}}",
+										"{{_webStoreId}}",
 										"checkouts",
 										":checkoutId",
 										"payments"
@@ -5891,6 +6081,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
+											"console.log(`${pm.info.requestName} Tests...`);",
+											"",
 											"pm.test(\"Status code is 201\", function () {",
 											"    pm.response.to.have.status(201);",
 											"});"
@@ -5902,7 +6094,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('10. Add single Product to Cart Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
@@ -5916,7 +6108,7 @@
 											"});\r",
 											"\r",
 											"// Expected strings in collection variables\r",
-											"['_webStoreId', '_token', '_cartStateOrId'].forEach(esicv => {\r",
+											"['_webStoreId', '_token', '_cartStateOrId', '_checkoutId'].forEach(esicv => {\r",
 											"    if(!pm.collectionVariables.has(esicv)) {\r",
 											"        const msg = 'Expected Postman collection variable not found: ' + esicv;\r",
 											"        pm.expect.fail(msg);\r",
@@ -5930,6 +6122,16 @@
 								}
 							],
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{_token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [
 									{
@@ -5947,9 +6149,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{orgUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{webstoreId}}/checkouts/:_checkoutId/orders",
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/checkouts/{{_checkoutId}}/orders",
 									"host": [
-										"{{orgUrl}}"
+										"{{_instanceUrl}}"
 									],
 									"path": [
 										"services",
@@ -5957,16 +6159,10 @@
 										"v{{apiVersion}}",
 										"commerce",
 										"webstores",
-										"{{webstoreId}}",
+										"{{_webStoreId}}",
 										"checkouts",
-										":_checkoutId",
+										"{{_checkoutId}}",
 										"orders"
-									],
-									"variable": [
-										{
-											"key": "_checkoutId",
-											"value": "{{_checkoutId}}"
-										}
 									]
 								},
 								"description": "Checkout Payments Action"
@@ -5980,6 +6176,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
+											"console.log(`${pm.info.requestName} Tests...`);",
+											"",
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200);",
 											"});"
@@ -5991,7 +6189,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"console.log('10. Add single Product to Cart Pre-request Script...');\r",
+											"console.log(`${pm.info.requestName} Pre-request Script...`);\r",
 											"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
 											"\r",
 											"// Expected strings in environment variables\r",
@@ -6019,12 +6217,22 @@
 								}
 							],
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{_token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{orgUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/order-summaries",
+									"raw": "{{_instanceUrl}}/services/data/v{{apiVersion}}/commerce/webstores/{{_webStoreId}}/order-summaries",
 									"host": [
-										"{{orgUrl}}"
+										"{{_instanceUrl}}"
 									],
 									"path": [
 										"services",
@@ -7789,6 +7997,56 @@
 					""
 				]
 			}
+		}
+	],
+	"variable": [
+		{
+			"key": "_token",
+			"value": ""
+		},
+		{
+			"key": "_instanceUrl",
+			"value": ""
+		},
+		{
+			"key": "_userId",
+			"value": ""
+		},
+		{
+			"key": "_orgId",
+			"value": ""
+		},
+		{
+			"key": "_webStoreId",
+			"value": ""
+		},
+		{
+			"key": "_effectiveAccountId",
+			"value": ""
+		},
+		{
+			"key": "_productNames",
+			"value": ""
+		},
+		{
+			"key": "_productIds",
+			"value": ""
+		},
+		{
+			"key": "_productId",
+			"value": ""
+		},
+		{
+			"key": "_cartStateOrId",
+			"value": ""
+		},
+		{
+			"key": "_checkoutId",
+			"value": ""
+		},
+		{
+			"key": "_addressId",
+			"value": ""
 		}
 	]
 }
