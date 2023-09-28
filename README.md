@@ -1,5 +1,7 @@
 # Salesforce B2B Commerce Postman Setup
 
+Created by Tom Zarr with key contributions from Sandra Golden and others
+
 This material is supplemental to the B2B Commerce Partner Learning Camp curricula. See the curricula and the contained courses for the complete setup procedure of a B2B Commerce standalone environment.
 
 This postman collection contains API endpoints from various Salesforce Commerce domains, but the emphasis is on completing B2B Commerce checkouts and performing operational tasks related to that end through the Connect API and other flavors of API available on the Salesforce platform.
@@ -15,6 +17,14 @@ Unlike many other Postman collections, this one is meant to be user friendly and
 ## What this collection is and isn't
 
 This collection is intended to be used for a B2B standalone setup. That isn't to say you can't use it with a Salesforce Org containing other commerce products, just that B2B is what's targeted.
+
+## Approach
+
+1. I've tried to stay "close to the metal" by using the Postman Scripting API directly. There are a few cases where this just isn't possible or realistic because things are not true JSON or HTTP status codes are reported in the HTML body text, but those should be true exceptions and definitely not the rule.
+2. I wanted oAuth 2.0 to not be a headache. This is my approach and it's about the best I could come up with given the limitations of the tool. Have a request where you set it once and then everything followiung just uses Bearer Token. It works and better is the enemy of good enough.
+3. The request chains are long; This is by design. At the risk of being didactic, this is ultimately a *teaching tool*. When it comes to working with APIs I find more detail is better.
+4. Collection variables are calculated and presented before each request.
+5. Tests are applied following each response. If something isn't right I want you to know about it early so I assume little to nothing that a response is successful.
 
 ### This collection will eventually provide the following (some are a work in progress)
 
@@ -34,7 +44,7 @@ This collection is intended to be used for a B2B standalone setup. That isn't to
 14. Get Inventory Availability (oAuth Flow + Connect API)
 15. Search Operations (indexing for now)
 
-## You need to set up a Connected App
+## Connected App
 
 Because we're using APIs you'll need to set up a Connected App in your org since Connect APIs and other flavors of APIs like SOAP may be in play.
 
@@ -94,7 +104,23 @@ Just follow these steps which will also be provided during an oAuth error state 
 
 ## Variables
 
-⚠️ __Note__: You must set up your environment variables correctly for this all to work. Collection variables will be calculated between requests and used in subsequent  requests. The naming convention used in the collection is to prefix with an underscore for collection variables.
+⚠️ __Note__: You must set up your environment variables correctly for this all to work. Collection variables will be calculated between requests and used in subsequent  requests. The naming convention used in the collection is to prefix collection variables with an underscore.
+
+These are bad examples. You should never (or almost never) see a call like these in the collection and it's strongly recommended that you not create them this way unless you like needless debugging:
+
+1. `pm.collectionVariables.set('myVariable', 'My new values');`
+2. `pm.collectionVariables.get('myVariable');`
+3. `pm.environment.set('_myVariable', 'My new values');`
+4. `pm.environment.get('_myVariable');`
+
+These are good examples as they adhere to the established naming convention and it's clear which dictionary we're referring to:
+
+1. `pm.collectionVariables.set('_myVariable', 'My new values');`
+2. `pm.collectionVariables.get('_myVariable');`
+3. `pm.environment.set('myVariable', 'My new values');`
+4. `pm.environment.get('myVariable');`
+
+Philosophically speaking, I don't like mixing which dictionary I get a value from. A value with an underscroe prefix in this naming convention should correspond to pm.collectionVariables and one without should come from (or be written to) pm.environment. I don't use a context stand-on object or variable that would allow pulling the value from either pm.collectionVariables or pm.environment. I believe quite strongly in the single definition principal and not coding by coincidence. If those terms are not familiar to you I'd recommend the book "The Pragmattic Programmer" as it could replace many on your shelf.
 
 ### Input values
 
