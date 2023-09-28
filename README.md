@@ -1,6 +1,18 @@
-# B2B Commerce Postman Setup with example files
+# Salesforce B2B Commerce Postman Setup with example files
 
 This material is supplemental to the B2B Commerce Partner Learning Camp curricula. See the curricula and the contained courses for the complete setup procedure of a B2B Commerce standalone environment.
+
+This postman collection contains API endpoints from various Salesforce Commerce domains, but the emphasis is on completing B2B Commerce checkouts and performing operational tasks related to that end through the Connect API and other flavors of API available on the Salesforce platform.
+
+Unlike many other Postman collections, this one is meant to be user friendly and have meaningful error messages when something is not set up correctly or there are issues in the request chains.
+
+This collection supports the Partner Learning Camp courses for B2B Commerce where you can find all the needed steps for setting up your environment.
+
+## ⚠️ Disclaimers
+
+- This collection is provided as-is. It's not officially supported by Salesforce or covered by SLAs.
+- API documentation is not provided with the collection. Please refer to the official documentation.
+- The documentation for the majority of the endpoints in this collection can be found in the [B2B and D2C Commerce Resources](https://developer.salesforce.com/docs/atlas.en-us.chatterapi.meta/chatterapi/connect_resources_commerce.htm) of the Connect REST API Developer Guide.
 
 ## What this collection is and isn't
 
