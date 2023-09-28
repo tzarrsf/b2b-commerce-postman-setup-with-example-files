@@ -96,14 +96,23 @@ Just follow these steps which will also be provided during an oAuth error state 
 
 ⚠️ __Note__: You must set up your environment variables correctly for this all to work. Collection variables will be calculated between requests and used in subsequent  requests. The naming convention used in the collection is to prefix with an underscore for collection variables.
 
-### Environment variables can be used to provide comma delimited values for these values
+### Input values
 
- 1. productNamesCommaDelimited
+### Some Environment variables are used for lookups to support reuse
+
+These are some examples:
+
+1. webstoreName (resolves to a WebStore Id)
+2. buyerAccountName (resolves to an Account Id)
+
+#### Some Environment variables can be used to provide comma delimited values
+
+ 1. productNamesCommaDelimited (resolves to a list of Product2 Ids)
  2. productStockKeepingUnitsCommaDelimited (used in OCI Postman collection)
  3. locationGroupIdentifiersCommaDelimited (used in OCI Postman collection)
  4. locationIdentifiersCommaDelimited (used in OCI Postman collection)
 
-### Environment variables can be used to provide a string value for these values
+#### Some Environment variables can be used to provide a single string value
 
  1. productSearchTerm
 
