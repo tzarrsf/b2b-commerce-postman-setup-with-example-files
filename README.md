@@ -21,10 +21,10 @@ This collection is intended to be used for a B2B standalone setup. That isn't to
 ## Approach
 
 1. I've tried to stay "close to the metal" by using the Postman Scripting API directly. There are a few cases where this just isn't possible or realistic because responses are not true JSON or HTTP status codes are reported in the HTML body text, but those should be true exceptions and definitely not the rule.
-2. I wanted oAuth 2.0 to not be a headache. This is my approach and it's about the best I could come up with given the limitations of the tool. Have a request where you set it once and then everything following just uses Bearer Token. It works and better is the enemy of good enough.
+2. I wanted oAuth 2.0 to be easy so I could move things around. This is my approach and it's about the best I could come up with given the limitations of the tool: Have a dummy request where you set it once in that folder then everything following just uses Bearer Token. It works and better is the enemy of good enough.
 3. The request chains are long; This is by design. At the risk of being didactic, this is ultimately a *teaching tool*. When it comes to working with APIs I find more detail is better.
 4. Collection variables are calculated and presented before each request.
-5. Tests are applied following each response. If something isn't right I want you to know about it early so I assume little to nothing that a response is successful.
+5. Tests are applied following each response. If something isn't right I want you to know about it early so I assume little to nothing about a response being successful.
 
 ### This collection will eventually provide the following (some are a work in progress)
 
@@ -44,7 +44,7 @@ This collection is intended to be used for a B2B standalone setup. That isn't to
 14. Get Inventory Availability (oAuth Flow + Connect API)
 15. Search Operations (indexing for now)
 
-## Connected App
+## Connected App Requirements
 
 Because we're using APIs you'll need to set up a Connected App in your org since Connect APIs and other flavors of APIs like SOAP may be in play.
 
@@ -61,13 +61,13 @@ You will need to obtain some values from your Connected App in order to establis
 
 Authentication is generally handled one of three ways:
 
-1. Logging in as an administrator (often used in the request chain's outset for lookup operations to make things reusable across orgs)
-2. Logging in as a 'known good' Buyer (aka Contact under Account with a User - all three must be set up and this is commonly _not_ going to be the case with a System Administrator account)
+1. Logging in as an Administrator (often used in the request chain's outset for lookup operations to preserve reusability across orgs) (see [Logging in as an Administrator or Buyer](./logging-in-as-an-administrator-or-buyer) 
+2. Logging in as a 'known good' Buyer (aka Contact under Account with a User - all three must be set up and this is commonly _not_ going to be the case with a System Administrator account) (see [Logging in as an Administrator or Buyer](./logging-in-as-an-administrator-or-buyer) 
 3. Establishing oAuth 2.0 *once per folder* and then having subsequent requests set to Bearer Token in the "Authorization" tab (see [ oAuth 2.0 is set once in each folder](./#oauth-20-is-set-once-per-folder-where-needed)
 
 ### Logging in as an Administrator or Buyer
 
-This is handled inline. Just supply the environment with the needed variables like these and the collection and scripting should take care of the rest for you:
+This is handled inline. Just supply the environment with the needed variables like these and the collection and scripting should take care of the rest:
 
 | Name | Description
 | --- | --- |
@@ -76,6 +76,8 @@ This is handled inline. Just supply the environment with the needed variables li
 | `orgAdminUsername` | The System Administrator username for the Salesforce org |
 | `orgAdminPassword` | The System Administrator password for the Salesforce org |
 | `orgAdminSecurityToken` | The security token for the Salesforce Org System Administrator User |
+
+If you need to move this type of authentication scheme around, just copy and paste it to another folder or location in the current folder.
 
 ### oAuth 2.0 is set once per folder where needed
 
@@ -120,7 +122,7 @@ These are good examples as they adhere to the established naming convention and 
 3. `pm.environment.set('myVariable', 'My new values');`
 4. `pm.environment.get('myVariable');`
 
-Philosophically speaking, I don't like mixing which dictionary I get a value from. A value with an underscore prefix in this naming convention should correspond to pm.collectionVariables and one without should come from (or be written to) pm.environment. I don't use a context stand-on object or variable that would allow pulling the value from either pm.collectionVariables or pm.environment. I believe quite strongly in the single definition principal and not coding by coincidence - even with tests. If those terms are not familiar to you I'd recommend the book "The Pragmatic Programmer" as it could replace many on your shelf (or device).
+I don't like mixing which dictionaries I use to get a value. A value with an underscore prefix in this naming convention should correspond to pm.collectionVariables and one without should come from (or in rare cases be written to) pm.environment. I don't use a context stand-in object or variable that would allow pulling a value by key from either pm.collectionVariables or pm.environment. I believe quite strongly in the single definition principal and not coding by coincidence - even with tests and especially with tests. If those terms are not familiar to you I'd recommend the book "The Pragmatic Programmer" as it could replace many on your shelf or device.
 
 ### Input values
 
