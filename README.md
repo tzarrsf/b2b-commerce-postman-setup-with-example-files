@@ -63,7 +63,7 @@ Authentication is generally handled one of three ways:
 
 1. Logging in as an administrator (often used in the request chain's outset for lookup operations to make things reusable across orgs)
 2. Logging in as a 'known good' Buyer (aka Contact under Account with a User - all three must be set up and this is commonly _not_ going to be the case with a System Administrator account)
-3. Establishing oAuth 2.0 *once per folder* and then having subsequent requests set to Bearer Token in the "Authorization" tab (see [ oAuth 2.0 is set __once__ in each folder](./# oAuth 2.0 is set __once__ in each folder)
+3. Establishing oAuth 2.0 *once per folder* and then having subsequent requests set to Bearer Token in the "Authorization" tab (see [ oAuth 2.0 is set once in each folder](./#oauth-20-is-set-once-per-folder-where-needed)
 
 ### Logging in as an Administrator or Buyer
 
