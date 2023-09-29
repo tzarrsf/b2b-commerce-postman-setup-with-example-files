@@ -96,7 +96,7 @@ Please don't take on a "do-it-yourself" approach with the oAuth 2.0 setup. Why?
 - Look for the request with a name like **Set your oAuth 2.0 Token in Authorization tab**
 - Please don't try to do a bunch of manual work on your token setup or get fancy here. Again, it's all filled in with variables already.
 
-Follow these steps to establish and used your token. These or something very similar will be provided as an error in the **Console** if there's an oAuth error state:
+Follow these steps to establish and use your token. These or something very similar will be provided as an error in the **Console** if there's an oAuth error state:
 
 1. Click on the Request with a name like "Set your oAuth 2.0 Token here in Authorization tab"
 2. Click the "Authorization" tab
@@ -147,7 +147,7 @@ Whatever the request is named in the Postman user interface is reflected dynamic
 
 `console.log(`${pm.info.requestName} Tests...`);`
 
-If you called your request "Heinz 57" you will see `Heinz 57 Pre-request Script...` or `Heinz 57 Tests...` in the console accordingly. You can drill into your request and response bodies as needed knowing what was passed to the endpoint.
+If you call your request "Heinz 57" you will see `Heinz 57 Pre-request Script...` or `Heinz 57 Tests...` in the console accordingly. You can drill into your request and response bodies as needed knowing what was passed to the endpoint.
 
 ### Requests must meet Preconditions
 
@@ -217,7 +217,7 @@ These are good examples as they adhere to the established naming convention and 
 3. `pm.environment.set('myVariable', 'My new value');`
 4. `pm.environment.get('myVariable');`
 
-Every coder has their preferences and principals. I don't like mixing sources like dictionaries for retrieving a value by key. A value with an underscore prefix in this naming convention should correspond to pm.collectionVariables and one without should come from pm.environment. I don't use a context stand-in object that allows pulling or pushing a value by key from either pm.collectionVariables or pm.environment at runtime. I believe strongly that a few coding principals such as singular definition and not coding by coincidence - even with tests, and especially with tests can save time. If those terms are not familiar I'd like to recommend the book "The Pragmatic Programmer" as it could replace many on your shelf or device.
+Every coder has their preferences and principles. I don't like mixing sources like dictionaries for retrieving a value by key. A value with an underscore prefix in this naming convention should correspond to pm.collectionVariables and one without should come from pm.environment. I don't use a context stand-in object that allows pulling or pushing a value by key from either pm.collectionVariables or pm.environment at runtime. I believe strongly that a few coding principals such as singular definition and not coding by coincidence - even with tests, and especially with tests can save time. If those terms are not familiar I'd like to recommend the book "The Pragmatic Programmer" as it could replace many on your shelf or device.
 
 ### Input values
 
