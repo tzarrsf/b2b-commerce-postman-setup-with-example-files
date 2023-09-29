@@ -2,6 +2,8 @@
 
 _Created by Tom Zarr with key contributions from Sandra Golden and Jordane Bachelet_
 
+## Background and Use Case
+
 This material is supplemental to the B2B Commerce Partner Learning Camp curricula. See the curricula and the contained courses for the complete setup procedure of a B2B Commerce standalone environment.
 
 This postman collection contains API endpoints from various Salesforce Commerce domains, but the emphasis is on completing B2B Commerce checkouts and performing operational tasks related to that end through the Connect API and other flavors of API available on the Salesforce platform.
@@ -59,11 +61,11 @@ You will need to obtain some values from your Connected App in order to establis
 
 ## Authentication Approach
 
-Authentication is generally handled one of three ways:
+Authentication is generally handled in three ways:
 
-1. Logging in as an Administrator (often used in the request chain's outset for lookup operations to preserve reusability across orgs) (see [Logging in as an Administrator or Buyer](./logging-in-as-an-administrator-or-buyer) 
-2. Logging in as a 'known good' Buyer (aka Contact under Account with a User - all three must be set up and this is commonly _not_ going to be the case with a System Administrator account) (see [Logging in as an Administrator or Buyer](./logging-in-as-an-administrator-or-buyer) 
-3. Establishing oAuth 2.0 *once per folder* and then having subsequent requests set to Bearer Token in the "Authorization" tab (see [ oAuth 2.0 is set once in each folder](./#oauth-20-is-set-once-per-folder-where-needed)
+1. Logging in as an Administrator (often used at request chain outset for lookup operations to preserve reusability across orgs). See [Logging in as an Administrator or Buyer](./logging-in-as-an-administrator-or-buyer).
+2. Logging in as a 'known good' Buyer (aka Contact under Account with a User). Please note that all three must be set up and this is commonly _not_ going to be the case with a System Administrator account. See [Logging in as an Administrator or Buyer](./logging-in-as-an-administrator-or-buyer). 
+3. Establishing oAuth 2.0 *once per folder* and then having subsequent requests set to Bearer Token in the **Authorization** tab. See [oAuth 2.0 is set once per folder where needed](./#oauth-20-is-set-once-per-folder-where-needed).
 
 ### Logging in as an Administrator or Buyer
 
@@ -77,24 +79,24 @@ This is handled inline. Just supply the environment with the needed variables li
 | `orgAdminPassword` | The System Administrator password for the Salesforce org |
 | `orgAdminSecurityToken` | The security token for the Salesforce Org System Administrator User |
 
-If you need to move this type of authentication scheme around, just copy and paste it to another folder or location in the current folder.
+If you need to move this type of Administrator or Buyer authentication scheme around, just copy the request and paste it into another folder or location in the current folder. Copy and paste operations are supported in Postman.
 
 ### oAuth 2.0 is set once per folder where needed
 
-Please don't take a "do-it-yourself" approach here. Why?
+Please don't take on a "do-it-yourself" approach with the oAuth 2.0 setup. Why?
 
-1. Most importantly, you don't need to.
-2. There's some scripting which checks if your token set up is correct to begin making requests.
-3. Tokens are passed in subsequent requests using __Bearer Token__ authentication on the requests needing it.
-4. This was done "by design" so you can easily add your own requests or copy them and move them around with little to no impact whenever oAuth is needed.
-5. You can also find and copy the requests named something like "Set your oAuth 2.0 Token in Authorization tab" whenever you need to establish oAuth 2.0 before another request or add it to a folder (regular copy paste operations of these objects is supported in Postman).
+1. Most importantly, you don't need to. This has all been completed using variables. There's no guesswork on which log in needs the token appended to the password, etc.
+2. There's scripting which checks if your token set up is correct to begin making requests.
+3. Tokens are passed in subsequent requests using __Bearer Token__ authentication on the requests needing it. Just turn it on - done.
+4. This was done "by design" so you can easily add your own requests or copy them and move them around with little to no impact whenever oAuth 2.0 is needed.
+5. You can also find and copy the requests named something like **Set your oAuth 2.0 Token in Authorization tab** whenever you need to establish oAuth 2.0 before another request or add it to a folder.
 
 #### Establishing oAuth 2.0 (First Time and Details)
 
-- Look for the request with a name like "Set your oAuth 2.0 Token in Authorization tab"
-- Don't try to do a bunch of manual work on your token setup or get fancy as it's all filled in for you with variables.
+- Look for the request with a name like **Set your oAuth 2.0 Token in Authorization tab**
+- Please don't try to do a bunch of manual work on your token setup or get fancy here. Again, it's all filled in with variables already.
 
-Just follow these steps which will also be provided during an oAuth error state in Postman's __Console__ as errors:
+Follow these steps to establish and used your token. These or something very similar will be provided as an error in the **Console** if there's an oAuth error state:
 
 1. Click on the Request with a name like "Set your oAuth 2.0 Token here in Authorization tab"
 2. Click the "Authorization" tab
@@ -104,25 +106,117 @@ Just follow these steps which will also be provided during an oAuth error state 
 6. Optional - Use the delete button's dropdown option to remove expired tokens (it's best to remove all of them except the newest)
 7. Retry your request(s)
 
+## Error Handling
+
+It's my intent to trap every reasonably predictable error state and save anyone using this collection time. I welcome your feedback on that front. That said, I can't cover every single org configuration or set of data and this is where you come in as a partner. Below are some of the common cases I have tried to account for so the request chains can inform you when something's wrong or at least provide hints to help troubleshoot what you're seeing.
+
+### Clear Collection Variables
+
+It's recommended you stick to the pattern of having this as the first step in your folder  as it does a few things to ensure your request chain data is kept consistent:
+
+1. The **Pre-request** tab makes sure that your environment is selected and stops the chain if not (dead programs tell no lies):
+
+```
+// Check for environment selection
+if(pm.environment.name === undefined) {
+    const msg = 'No Postman environment selected or set.';
+    pm.expect.fail(msg);
+}
+```
+
+2. The **Pre-request** tab makes sure that it clears out the collection variables:
+
+```
+// Clean up the variables from the collection set throughout the various calls
+pm.collectionVariables.clear();
+```
+
+3. The **Test** tab ensures the collection is indeed empty:
+
+```
+pm.test('Make sure collection variables are clean', () => {
+    pm.expect(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value)).to.be.an('array').empty;
+});
+```
+
+### Request names are pulled in dynamically in both the Pre-request and Test code
+
+Whatever the request is named in the Postman user interface is reflected dynamically by these code snippets:
+
+`console.log(`${pm.info.requestName} Pre-request Script...`);`
+
+`console.log(`${pm.info.requestName} Tests...`);`
+
+If you called your request "Heinz 57" you will see `Heinz 57 Pre-request Script...` or `Heinz 57 Tests...` in the console accordingly. You can drill into your request and response bodies as needed knowing what was passed to the endpoint.
+
+### Requests must meet Preconditions
+
+If **environment** variables are expected for a request they are tested on the Pre-request script tab and if not found the test run should go to a hard fail state. Just look for the error (red text) in the Console.
+
+```
+// Expected strings in environment variables
+['host', 'tenantId', 'bearerToken'].forEach(esiev => {
+    if(!pm.environment.has(esiev)) {
+        const msg = `Expected Postman environment variable not found: '${esiev}' in environment: '${pm.environment.name}'.`;
+        pm.expect.fail(msg);
+    }
+    pm.expect(pm.environment.get(esiev)).to.exist;
+    pm.expect(pm.environment.get(esiev)).to.be.an('string');
+});
+```
+
+If **collection** variables are expected they are tested on the Pre-request script tab. Like the environment variables, the test run should go to a hard fail state and you should find a *meaningful* error in the Console. 
+
+```
+// Expected strings in collection variables
+['_webStoreId', '_token', '_orgId'].forEach(esicv => {
+    if(pm.collectionVariables.get(esicv) === undefined) {
+        const msg = 'Expected Postman collection variable not found: ' + esicv;
+        pm.expect.fail(msg);
+    }
+    pm.expect(pm.collectionVariables.get(esicv)).to.exist;
+    pm.expect(pm.collectionVariables.get(esicv)).to.be.an('string');
+});
+```
+
+### Collection variables are listed in each Pre-request
+
+This code snippet allows you to see things _before_ each request is made in the **Pre-Request Script** tab:
+
+```
+console.log('Collection variables before:\r\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\r\n')));
+```
+
+Example of collection variables being printed to the console in a Pre-request script:
+
+```
+Collection variables before:↵
+_instanceUrl: https://toms-org.my.salesforce.com↵
+_locationGroupIdentifiers: ["LocationGroup01"]↵
+_orgId: 00DHn0000YYYYYYYYY↵
+_productStockKeepingUnits: ["PROSE","B-C-COFMAC-001","ESP-IOT-1","ID-PEM","PS-EL","PS-INF","TR-COFMAC-001"]↵
+_token: 0xdeadbeef!0x8badfood!0xfeedfacecafebeefx.01123581321345589144233377610↵
+_userId: 005HnXXXXXXXXXXXXX
+
 ## Variables
 
-⚠️ __Note__: You must set up your environment variables correctly for this all to work. Collection variables will be calculated between requests and used in subsequent  requests. The naming convention used in the collection is to prefix collection variables with an underscore.
+> ⚠️ **Note**: You must set up your environment variables correctly for all of this to work. Collection variables are typically calculated and assigned between requests (in the **Test** tab script) and used in subsequent requests. The naming convention used in the collection is to prefix collection variable keys with an underscore like `_tomsVariableKey` while  an environment variable should not contain an underscore. Example: `tomsVariableKey`. I would never recommend writing to environment variables at runtime. My approach is to keep these consistent across the collection and all folders across the collection and use them only when changing orgs, storefronts or users.
 
-These are bad examples. You should never (or almost never) see a call like these in the collection and it's strongly recommended that you not create them this way unless you like needless debugging:
+These are some *bad* examples. You shouldn't see calls like these in the collection and it's strongly recommended that you do not create them this way to avoid needless debugging:
 
-1. `pm.collectionVariables.set('myVariable', 'My new values');`
+1. `pm.collectionVariables.set('myVariable', 'My new value');`
 2. `pm.collectionVariables.get('myVariable');`
-3. `pm.environment.set('_myVariable', 'My new values');`
+3. `pm.environment.set('_myVariable', 'My new value');`
 4. `pm.environment.get('_myVariable');`
 
-These are good examples as they adhere to the established naming convention and it's clear which dictionary we're referring to:
+These are good examples as they adhere to the established naming convention and it's clear which dictionary we're using when the name is seen in the Console:
 
-1. `pm.collectionVariables.set('_myVariable', 'My new values');`
+1. `pm.collectionVariables.set('_myVariable', 'My new value');`
 2. `pm.collectionVariables.get('_myVariable');`
-3. `pm.environment.set('myVariable', 'My new values');`
+3. `pm.environment.set('myVariable', 'My new value');`
 4. `pm.environment.get('myVariable');`
 
-I don't like mixing which dictionaries I use to get a value. A value with an underscore prefix in this naming convention should correspond to pm.collectionVariables and one without should come from (or in rare cases be written to) pm.environment. I don't use a context stand-in object or variable that would allow pulling a value by key from either pm.collectionVariables or pm.environment. I believe quite strongly in the single definition principal and not coding by coincidence - even with tests and especially with tests. If those terms are not familiar to you I'd recommend the book "The Pragmatic Programmer" as it could replace many on your shelf or device.
+Every coder has their preferences and principals. I don't like mixing sources like dictionaries for retrieving a value by key. A value with an underscore prefix in this naming convention should correspond to pm.collectionVariables and one without should come from pm.environment. I don't use a context stand-in object that allows pulling or pushing a value by key from either pm.collectionVariables or pm.environment at runtime. I believe strongly that a few coding principals such as singular definition and not coding by coincidence - even with tests, and especially with tests can save time. If those terms are not familiar I'd like to recommend the book "The Pragmatic Programmer" as it could replace many on your shelf or device.
 
 ### Input values
 
@@ -144,7 +238,7 @@ These are some examples:
 
  1. productSearchTerm
 
-### Standardized variables (also documented in the Postman collection)
+## Standardized variables
 
 ⚠️ __Note__: The naming convention found here is used across other Salesforce Commerce product Postman collections in the Partner Readiness space when possible to support reuse and collaboration.
 
@@ -170,4 +264,7 @@ This Postman collection relies on the following variables:
 | `productSearchTerm` | The search term to use for a Happy Path | User supplied: Example `Coffee` |
 | `currencyIsoCode` | The currency code for the cart. | User supplied: Example `USD` for United States Dollar |
 
-Consult the Partner Learning Camp B2B Commerce curriculum and course documentation for additional details.
+Please consult the Partner Learning Camp B2B Commerce curriculum and course documentation for additional details.
+
+Enjoy the collection!
+- Tom Zarr (tzarr@salesforce.com) September, 2023
