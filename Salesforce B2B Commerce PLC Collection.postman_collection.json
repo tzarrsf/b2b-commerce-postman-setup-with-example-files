@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "07f3aa13-a950-48b5-9665-6549e8dd513d",
 		"name": "Salesforce B2B Commerce PLC Collection",
-		"description": "# Salesforce B2B Commerce Postman Setup for Partners\n\n_Created by Tom Zarr with key contributions from Sandra Golden and Jordane Bachelet_\n\n## Background and Use Case\n\nThis material is supplemental to the B2B Commerce Partner Learning Camp curricula. See the curricula and the contained courses for the complete setup procedure of a B2B Commerce standalone environment.\n\nThis postman collection contains API endpoints from various Salesforce Commerce domains, but the emphasis is on completing B2B Commerce checkouts and performing operational tasks related to that end through the Connect API and other flavors of API available on the Salesforce platform.\n\nUnlike many other Postman collections, this one is meant to be user friendly and have meaningful error messages when something is not set up correctly or there are issues in the request chains.\n\n## ⚠️ Disclaimers\n\n- This collection is provided as-is. It's not officially supported by Salesforce or covered by SLAs.\n- API documentation is not provided with the collection. Please refer to the official documentation.\n- The documentation for the majority of the endpoints in this collection can be found in the [B2B and D2C Commerce Resources](https://developer.salesforce.com/docs/atlas.en-us.chatterapi.meta/chatterapi/connect_resources_commerce.htm) of the Connect REST API Developer Guide.\n    \n\n## What this collection is and isn't\n\nThis collection is intended to be used for a B2B standalone setup. That isn't to say you can't use it with a Salesforce Org containing other commerce products, just that B2B is what's targeted.\n\n## Approach\n\n1. I've tried to stay \"close to the metal\" by using the Postman Scripting API directly. There are a few cases where this just isn't possible or realistic because responses are not true JSON or HTTP status codes are reported in the HTML body text, but those should be true exceptions and definitely not the rule.\n2. I wanted oAuth 2.0 to be easy so I could move things around. This is my approach and it's about the best I could come up with given the limitations of the tool: Have a dummy request where you set it once in that folder then everything following just uses Bearer Token. It works and better is the enemy of good enough.\n3. The request chains are long; This is by design. At the risk of being didactic, this is ultimately a _teaching tool_. When it comes to working with APIs I find more detail is better.\n4. Collection variables are calculated and presented before each request.\n5. Tests are applied following each response. If something isn't right I want you to know about it early so I assume little to nothing about a response being successful.\n    \n\n### This collection will eventually provide the following (some are a work in progress)\n\n1. Product Search (Log In Flow)\n2. Product Search (oAuth Flow)\n3. Cart / Authenticated\n4. Cart / Guest\n5. Deployment / Payment - WIP\n6. Deployment / Register External Services - WIP\n7. Checkout / Authenticated Happy Path\n8. Checkout / Guest Happy Path\n9. Cancel Checkout / Authenticated Happy Path\n10. Cancel Checkout / Guest Happy Path\n11. Pricing / Authenticated\n12. Pricing / Guest\n13. Get Inventory Availability (Log In Flow + Connect API)\n14. Get Inventory Availability (oAuth Flow + Connect API)\n15. Search Operations (indexing for now)\n    \n\n## Connected App Requirements\n\nBecause we're using APIs you'll need to set up a Connected App in your org since Connect APIs and other flavors of APIs like SOAP may be in play.\n\nBy way of example the Omnichannel Inventory Postman Collection used two Connected Apps (one for the Headless APIs and one for the Connect APIs)\n\n- Postman_OCI\n- Postman_OCI_ConnectApi\n    \n\nYou can see the [Omnichannel Inventory Postman Setup repository here](https://github.com/tzarrsf/omnichannel-inventory-postman-setup-with-example-files/)\n\nYou will need to obtain some values from your Connected App in order to establish connectivity (see: [Variables](https://./#Variables))\n\n## Authentication Approach\n\nAuthentication is generally handled in three ways:\n\n1. Logging in as an Administrator (often used at request chain outset for lookup operations to preserve reusability across orgs). See [Logging in as an Administrator or Buyer](https://./logging-in-as-an-administrator-or-buyer).\n2. Logging in as a 'known good' Buyer (aka Contact under Account with a User). Please note that all three must be set up and this is commonly _not_ going to be the case with a System Administrator account. See [Logging in as an Administrator or Buyer](https://./logging-in-as-an-administrator-or-buyer).\n3. Establishing oAuth 2.0 _once per folder_ and then having subsequent requests set to Bearer Token in the **Authorization** tab. See [oAuth 2.0 is set once per folder where needed](https://./#oauth-20-is-set-once-per-folder-where-needed).\n    \n\n### Logging in as an Administrator or Buyer\n\nThis is handled inline. Just supply the environment with the needed variables like these and the collection and scripting should take care of the rest:\n\n| Name | Description |\n| --- | --- |\n| `orgLoginUrl` | Either `https://login.salesforce.com` (production / trial) or `https://test.salesforce.com` (sandbox) |\n| `orgHost` | Protocol and host portion of the Salesforce org's URL Example: `https://yourusername-august.lightning.force.com` |\n| `orgAdminUsername` | The System Administrator username for the Salesforce org |\n| `orgAdminPassword` | The System Administrator password for the Salesforce org |\n| `orgAdminSecurityToken` | The security token for the Salesforce Org System Administrator User |\n\nIf you need to move this type of Administrator or Buyer authentication scheme around, just copy the request and paste it into another folder or location in the current folder. Copy and paste operations are supported in Postman.\n\n### oAuth 2.0 is set once per folder where needed\n\nPlease don't take on a \"do-it-yourself\" approach with the oAuth 2.0 setup. Why?\n\n1. Most importantly, you don't need to. This has all been completed using variables. There's no guesswork on which log in needs the token appended to the password, etc.\n2. There's scripting which checks if your token set up is correct to begin making requests.\n3. Tokens are passed in subsequent requests using **Bearer Token** authentication on the requests needing it. Just turn it on - done.\n4. This was done \"by design\" so you can easily add your own requests or copy them and move them around with little to no impact whenever oAuth 2.0 is needed.\n5. You can also find and copy the requests named something like **Set your oAuth 2.0 Token in Authorization tab** whenever you need to establish oAuth 2.0 before another request or add it to a folder.\n    \n\n#### Establishing oAuth 2.0 (First Time and Details)\n\n- Look for the request with a name like **Set your oAuth 2.0 Token in Authorization tab**\n- Please don't try to do a bunch of manual work on your token setup or get fancy here. Again, it's all filled in with variables already.\n    \n\nFollow these steps to establish and use your token. These or something very similar will be provided as an error in the **Console** if there's an oAuth error state:\n\n1. Click on the Request with a name like \"Set your oAuth 2.0 Token here in Authorization tab\"\n2. Click the \"Authorization\" tab\n3. Click the \"Get New Access Token\" button\n4. Click the \"Proceed\" button\n5. Click the \"Use Token\" button\n6. Optional - Use the delete button's dropdown option to remove expired tokens (it's best to remove all of them except the newest)\n7. Retry your request(s)\n    \n\n## Error Handling\n\nIt's my intent to trap every reasonably predictable error state and save anyone using this collection time. I welcome your feedback on that front. That said, I can't cover every single org configuration or set of data and this is where you come in as a partner. Below are some of the common cases I have tried to account for so the request chains can inform you when something's wrong or at least provide hints to help troubleshoot what you're seeing.\n\n### Clear Collection Variables\n\nIt's recommended you stick to the pattern of having this as the first step in your folder as it does a few things to ensure your request chain data is kept consistent:\n\n1. The **Pre-request** tab makes sure that your environment is selected and stops the chain if not (dead programs tell no lies):\n    \n\n```\n// Check for environment selection\nif(pm.environment.name === undefined) {\n    const msg = 'No Postman environment selected or set.';\n    pm.expect.fail(msg);\n}\n\n ```\n\n1. The **Pre-request** tab makes sure that it clears out the collection variables:\n    \n\n```\n// Clean up the variables from the collection set throughout the various calls\npm.collectionVariables.clear();\n\n ```\n\n1. The **Test** tab ensures the collection is indeed empty:\n    \n\n```\npm.test('Make sure collection variables are clean', () => {\n    pm.expect(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value)).to.be.an('array').empty;\n});\n\n ```\n\n### Request names are pulled in dynamically in both the Pre-request and Test code\n\nWhatever the request is named in the Postman user interface is reflected dynamically by these code snippets:\n\n`console.log(`${pm.info.requestName} Pre-request Script...`);`\n\n`console.log(`${pm.info.requestName} Tests...`);`\n\nIf you call your request \"Heinz 57\" you will see `Heinz 57 Pre-request Script...` or `Heinz 57 Tests...` in the console accordingly. You can drill into your request and response bodies as needed knowing what was passed to the endpoint.\n\n### Requests must meet Preconditions\n\nIf **environment** variables are expected for a request they are tested on the Pre-request script tab and if not found the test run should go to a hard fail state. Just look for the error (red text) in the Console.\n\n```\n// Expected strings in environment variables\n['host', 'tenantId', 'bearerToken'].forEach(esiev => {\n    if(!pm.environment.has(esiev)) {\n        const msg = `Expected Postman environment variable not found: '${esiev}' in environment: '${pm.environment.name}'.`;\n        pm.expect.fail(msg);\n    }\n    pm.expect(pm.environment.get(esiev)).to.exist;\n    pm.expect(pm.environment.get(esiev)).to.be.an('string');\n});\n\n ```\n\nIf **collection** variables are expected they are tested on the Pre-request script tab. Like the environment variables, the test run should go to a hard fail state and you should find a _meaningful_ error in the Console.\n\n```\n// Expected strings in collection variables\n['_webStoreId', '_token', '_orgId'].forEach(esicv => {\n    if(pm.collectionVariables.get(esicv) === undefined) {\n        const msg = 'Expected Postman collection variable not found: ' + esicv;\n        pm.expect.fail(msg);\n    }\n    pm.expect(pm.collectionVariables.get(esicv)).to.exist;\n    pm.expect(pm.collectionVariables.get(esicv)).to.be.an('string');\n});\n\n ```\n\n### Collection variables are listed in each Pre-request\n\nThis code snippet allows you to see things _before_ each request is made in the **Pre-Request Script** tab:\n\n```\nconsole.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\n\n ```\n\nExample of collection variables being printed to the console in a Pre-request script:\n\n```\nCollection variables before:↵\n_instanceUrl: https://toms-org.my.salesforce.com↵\n_locationGroupIdentifiers: [\"LocationGroup01\"]↵\n_orgId: 00DHn0000YYYYYYYYY↵\n_productStockKeepingUnits: [\"PROSE\",\"B-C-COFMAC-001\",\"ESP-IOT-1\",\"ID-PEM\",\"PS-EL\",\"PS-INF\",\"TR-COFMAC-001\"]↵\n_token: 0xdeadbeef!0x8badfood!0xfeedfacecafebeefx.01123581321345589144233377610↵\n_userId: 005HnXXXXXXXXXXXXX\n\n ```\n\n## Variables\n\n> ⚠️ **Note**: You must set up your environment variables correctly for all of this to work. Collection variables are typically calculated and assigned between requests (in the **Test** tab script) and used in subsequent requests. The naming convention used in the collection is to prefix collection variable keys with an underscore like `_tomsVariableKey` while an environment variable should not contain an underscore. Example: `tomsVariableKey`. I would never recommend writing to environment variables at runtime. My approach is to keep these consistent across the collection and all folders across the collection and use them only when changing orgs, storefronts or users. \n  \n\nThese are some _bad_ examples. You shouldn't see calls like these in the collection and it's strongly recommended that you do not create them this way to avoid needless debugging:\n\n1. `pm.collectionVariables.set('myVariable', 'My new value');`\n2. `pm.collectionVariables.get('myVariable');`\n3. `pm.environment.set('_myVariable', 'My new value');`\n4. `pm.environment.get('_myVariable');`\n    \n\nThese are good examples as they adhere to the established naming convention and it's clear which dictionary we're using when the name is seen in the Console:\n\n1. `pm.collectionVariables.set('_myVariable', 'My new value');`\n2. `pm.collectionVariables.get('_myVariable');`\n3. `pm.environment.set('myVariable', 'My new value');`\n4. `pm.environment.get('myVariable');`\n    \n\nEvery coder has their preferences and principles. I don't like mixing sources like dictionaries for retrieving a value by key. A value with an underscore prefix in this naming convention should correspond to pm.collectionVariables and one without should come from pm.environment. I don't use a context stand-in object that allows pulling or pushing a value by key from either pm.collectionVariables or pm.environment at runtime. I believe strongly that a few coding principals such as singular definition and not coding by coincidence - even with tests, and especially with tests can save time. If those terms are not familiar I'd like to recommend the book \"The Pragmatic Programmer\" as it could replace many on your shelf or device.\n\n### Input values\n\n#### Some Environment variables are used for lookups to support reuse\n\nThese are some examples:\n\n1. webstoreName (resolves to a WebStore Id)\n2. buyerAccountName (resolves to an Account Id)\n    \n\n#### Some Environment variables can be used to provide comma delimited values\n\n1. productNamesCommaDelimited (resolves to a list of Product2 Ids)\n2. productStockKeepingUnitsCommaDelimited (used in OCI Postman collection)\n3. locationGroupIdentifiersCommaDelimited (used in OCI Postman collection)\n4. locationIdentifiersCommaDelimited (used in OCI Postman collection)\n    \n\n#### Some Environment variables can be used to provide a single string value\n\n1. productSearchTerm\n    \n\n## Standardized variables\n\n⚠️ **Note**: The naming convention found here is used across other Salesforce Commerce product Postman collections in the Partner Readiness space when possible to support reuse and collaboration.\n\nThis Postman collection relies on the following variables:\n\n| Name | Description | Location |\n| --- | --- | --- |\n| `orgLoginUrl` | Either `https://login.salesforce.com` (production/trial) or `https://test.salesforce.com` (sandbox) | User supplied |\n| `orgHost` | Protocol and host portion of the Salesforce org's URL | User supplied. Example: `https://yourusername-august.lightning.force.com` |\n| `orgAdminUsername` | The System Administrator username for the Salesforce org | User supplied |\n| `orgAdminPassword` | The System Administrator password for the Salesforce org | User supplied |\n| `orgAdminSecurityToken` | The security token for the Salesforce Org System Administrator User | Autogenerated |\n| `orgHostMySalesforceFormat` | The protocol and host portion of the Salesforce org's URL in 'my.salesforce.com' format. Useful for avoiding redirection problems and 'Invalid Session Id' errors post authentication | User supplied. Example: `https://yourusername-august.my.salesforce.com` |\n| `orgId` | The Salesforce.com Organization ID for the Salesforce org | Setup > Company Information |\n| `apiVersion` | The Salesforce API version (e.g. 58.0). | User supplied. Most recent value recommended. |\n| `connectedAppConsumerKey` | The Consumer Secret value for the Connected App in the Salesforce org. | Setup > App Manager > Connected App Record > View > Manage Consumer Details |\n| `connectedAppConsumerSecret` | The Consumer Secret value in the Connected App. | Setup > App Manager > Connected App Record > View > Manage Consumer Details |\n| `webstoreName` | Name of the webstore used to look up a corresponding Id | The value specified when the store / site was created such as 'B2B LWR Enhanced Store from TSO.' Can be found in the Commerce App under 'Stores.' |\n| `buyerUsername` | Registered B2B Buyer User's username. | User supplied. |\n| `buyerPassword` | Registered B2B Buyer User's password. | User supplied. |\n| `buyerAccountName` | Name of the Account used to look up the Account Id which is tied to the Buyer User. | User supplied. Example: `United Coffee Bean Corp` |\n| `productNamesCommaDelimited` | Comma-delimited list of product names which are resolved to Ids. | User supplied: Example `Testa Rossa Coffee Machine (Sample),Capricorn I Group Espresso Machine (Sample)` |\n| `productSearchTerm` | The search term to use for a Happy Path | User supplied: Example `Coffee` |\n| `currencyIsoCode` | The currency code for the cart. | User supplied: Example `USD` for United States Dollar |\n\nPlease consult the Partner Learning Camp B2B Commerce curriculum and course documentation for additional details.\n\nEnjoy the collection!\n\n- Tom Zarr ([tzarr@salesforce.com](https://mailto:tzarr@salesforce.com)) September, 2023",
+		"description": "# Salesforce B2B Commerce Postman Setup for Partners\n\n_Created by Tom Zarr with key contributions from Sandra Golden and Jordane Bachelet_\n\n## Background and Use Case\n\nThis material is supplemental to the B2B Commerce Partner Learning Camp curricula. See the curricula and the contained courses for the complete setup procedure of a B2B Commerce standalone environment.\n\nThis postman collection contains API endpoints from various Salesforce Commerce domains, but the emphasis is on completing B2B Commerce checkouts and performing operational tasks related to that end through the Connect API and other flavors of API available on the Salesforce platform.\n\nUnlike many other Postman collections, this one is meant to be user friendly and have meaningful error messages when something is not set up correctly or there are issues in the request chains.\n\n## ⚠️ Disclaimers\n\n- This collection is provided as-is. It's not officially supported by Salesforce or covered by SLAs.\n- API documentation is not provided with the collection. Please refer to the official documentation.\n- The documentation for the majority of the endpoints in this collection can be found in the [B2B and D2C Commerce Resources](https://developer.salesforce.com/docs/atlas.en-us.chatterapi.meta/chatterapi/connect_resources_commerce.htm) of the Connect REST API Developer Guide.\n    \n\n## What this collection is and isn't\n\nThis collection is intended to be used for a B2B standalone setup. That isn't to say you can't use it with a Salesforce Org containing other commerce products, just that B2B is what's targeted.\n\n## Approach\n\n1. I've tried to stay \"close to the metal\" by using the Postman Scripting API directly. There are a few cases where this just isn't possible or realistic because responses are not true JSON or HTTP status codes are reported in the HTML body text, but those should be true exceptions and definitely not the rule.\n2. I wanted oAuth 2.0 to be easy so I could move things around. This is my approach and it's about the best I could come up with given the limitations of the tool: Have a dummy request where you set it once in that folder then everything following just uses Bearer Token. It works and better is the enemy of good enough.\n3. The request chains are long; This is by design. At the risk of being didactic, this is ultimately a _teaching tool_. When it comes to working with APIs I find more detail is better.\n4. Collection variables are calculated and presented before each request.\n5. Tests are applied following each response. If something isn't right I want you to know about it early so I assume little to nothing about a response being successful.\n    \n\n### This collection will eventually provide the following (some are a work in progress)\n\n1. Product Search (Log In Flow)\n2. Product Search (oAuth Flow)\n3. Cart / Authenticated\n4. Cart / Guest\n5. Deployment / Payment - WIP\n6. Deployment / Register External Services - WIP\n7. Checkout / Authenticated Happy Path\n8. Checkout / Guest Happy Path\n9. Cancel Checkout / Authenticated Happy Path\n10. Cancel Checkout / Guest Happy Path\n11. Pricing / Authenticated\n12. Pricing / Guest\n13. Get Inventory Availability (Log In Flow + Connect API)\n14. Get Inventory Availability (oAuth Flow + Connect API)\n15. Search Operations (indexing for now)\n    \n\n## Connected App Requirements\n\nBecause we're using APIs you'll need to set up a Connected App in your org since Connect APIs and other flavors of APIs like SOAP may be in play.\n\nBy way of example the Omnichannel Inventory Postman Collection used two Connected Apps (one for the Headless APIs and one for the Connect APIs)\n\n- Postman_OCI\n- Postman_OCI_ConnectApi\n    \n\nYou can see the [Omnichannel Inventory Postman Setup repository here](https://github.com/tzarrsf/omnichannel-inventory-postman-setup-with-example-files/)\n\nYou will need to obtain some values from your Connected App in order to establish connectivity (see: [Variables](https://./#Variables))\n\n## Authentication Approach\n\nAuthentication is generally handled in three ways:\n\n1. Logging in as an Administrator (often used at request chain outset for lookup operations to preserve reusability across orgs). See [Logging in as an Administrator or Buyer](https://./logging-in-as-an-administrator-or-buyer).\n2. Logging in as a 'known good' Buyer (aka Contact under Account with a User). Please note that all three must be set up and this is commonly _not_ going to be the case with a System Administrator account. See [Logging in as an Administrator or Buyer](https://./logging-in-as-an-administrator-or-buyer).\n3. Establishing oAuth 2.0 _once per folder_ and then having subsequent requests set to Bearer Token in the **Authorization** tab. See [oAuth 2.0 is set once per folder where needed](https://./#oauth-20-is-set-once-per-folder-where-needed).\n    \n\n### Logging in as an Administrator or Buyer\n\nThis is handled inline. Just supply the environment with the needed variables like these and the collection and scripting should take care of the rest:\n\n| Name | Description |\n| --- | --- |\n| `orgLoginUrl` | Either `https://login.salesforce.com` (production / trial) or `https://test.salesforce.com` (sandbox) |\n| `orgHost` | Protocol and host portion of the Salesforce org's URL Example: `https://yourusername-august.lightning.force.com` |\n| `orgAdminUsername` | The System Administrator username for the Salesforce org |\n| `orgAdminPassword` | The System Administrator password for the Salesforce org |\n| `orgAdminSecurityToken` | The security token for the Salesforce Org System Administrator User |\n\nIf you need to move this type of Administrator or Buyer authentication scheme around, just copy the request and paste it into another folder or location in the current folder. Copy and paste operations are supported in Postman.\n\n### oAuth 2.0 is set once per folder where needed\n\nPlease don't take on a \"do-it-yourself\" approach with the oAuth 2.0 setup. Why?\n\n1. Most importantly, you don't need to. This has all been completed using variables. There's no guesswork on which log in needs the token appended to the password, etc.\n2. There's scripting which checks if your token set up is correct to begin making requests.\n3. Tokens are passed in subsequent requests using **Bearer Token** authentication on the requests needing it. Just turn it on - done.\n4. This was done \"by design\" so you can easily add your own requests or copy them and move them around with little to no impact whenever oAuth 2.0 is needed.\n5. You can also find and copy the requests named something like **Set your oAuth 2.0 Token in Authorization tab** whenever you need to establish oAuth 2.0 before another request or add it to a folder.\n    \n\n#### Establishing oAuth 2.0 (First Time and Details)\n\n- Look for the request with a name like **Set your oAuth 2.0 Token in Authorization tab**\n- Please don't try to do a bunch of manual work on your token setup or get fancy here. Again, it's all filled in with variables already.\n    \n\nFollow these steps to establish and use your token. These or something very similar will be provided as an error in the **Console** if there's an oAuth error state:\n\n1. Click on the Request with a name like \"Set your oAuth 2.0 Token here in Authorization tab\"\n2. Click the \"Authorization\" tab\n3. Click the \"Get New Access Token\" button\n4. Click the \"Proceed\" button\n5. Click the \"Use Token\" button\n6. Optional - Use the delete button's dropdown option to remove expired tokens (it's best to remove all of them except the newest)\n7. Retry your request(s)\n    \n\n## Error Handling\n\nIt's my intent to trap every reasonably predictable error state and save anyone using this collection time. I welcome your feedback on that front. That said, I can't cover every single org configuration or set of data and this is where you come in as a partner. Below are some of the common cases I have tried to account for so the request chains can inform you when something's wrong or at least provide hints to help troubleshoot what you're seeing.\n\n### Clear Collection Variables\n\nIt's recommended you stick to the pattern of having this as the first step in your folder as it does a few things to ensure your request chain data is kept consistent:\n\n1. The **Pre-request** tab makes sure that your environment is selected and stops the chain if not (dead programs tell no lies):\n    \n\n```\n// Check for environment selection\nif(pm.environment.name === undefined) {\n    const msg = 'No Postman environment selected or set.';\n    pm.expect.fail(msg);\n}\n\n ```\n\n1. The **Pre-request** tab makes sure that it clears out the collection variables:\n    \n\n```\n// Clean up the variables from the collection set throughout the various calls\npm.collectionVariables.clear();\n\n ```\n\n1. The **Test** tab ensures the collection is indeed empty:\n    \n\n```\npm.test('Make sure collection variables are clean', () => {\n    pm.expect(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value)).to.be.an('array').empty;\n});\n\n ```\n\n### Request names are pulled in dynamically in both the Pre-request and Test code\n\nWhatever the request is named in the Postman user interface is reflected dynamically by these code snippets:\n\n`console.log(`${pm.info.requestName} Pre-request Script...`);`\n\n`console.log(`${pm.info.requestName} Tests...`);`\n\nIf you call your request \"Heinz 57\" you will see `Heinz 57 Pre-request Script...` or `Heinz 57 Tests...` in the console accordingly. You can drill into your request and response bodies as needed knowing what was passed to the endpoint.\n\n### Requests must meet Preconditions\n\nIf **environment** variables are expected for a request they are tested on the Pre-request script tab and if not found the test run should go to a hard fail state. Just look for the error (red text) in the Console.\n\n```\n// Expected strings in environment variables\n['host', 'tenantId', 'bearerToken'].forEach(esiev => {\n    if(!pm.environment.has(esiev)) {\n        const msg = `Expected Postman environment variable not found: '${esiev}' in environment: '${pm.environment.name}'.`;\n        pm.expect.fail(msg);\n    }\n    pm.expect(pm.environment.get(esiev)).to.exist;\n    pm.expect(pm.environment.get(esiev)).to.be.an('string');\n});\n\n ```\n\nIf **collection** variables are expected they are tested on the Pre-request script tab. Like the environment variables, the test run should go to a hard fail state and you should find a _meaningful_ error in the Console.\n\n```\n// Expected strings in collection variables\n['_webStoreId', '_token', '_orgId'].forEach(esicv => {\n    if(pm.collectionVariables.get(esicv) === undefined) {\n        const msg = 'Expected Postman collection variable not found: ' + esicv;\n        pm.expect.fail(msg);\n    }\n    pm.expect(pm.collectionVariables.get(esicv)).to.exist;\n    pm.expect(pm.collectionVariables.get(esicv)).to.be.an('string');\n});\n\n ```\n\n### Collection variables are listed in each Pre-request\n\nThis code snippet allows you to see things _before_ each request is made in the **Pre-Request Script** tab:\n\n```\nconsole.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\n\n ```\n\nExample of collection variables being printed to the console in a Pre-request script:\n\n```\nCollection variables before:↵\n_instanceUrl: https://toms-org.my.salesforce.com↵\n_locationGroupIdentifiers: [\"LocationGroup01\"]↵\n_orgId: 00DHn0000YYYYYYYYY↵\n_productStockKeepingUnits: [\"PROSE\",\"B-C-COFMAC-001\",\"ESP-IOT-1\",\"ID-PEM\",\"PS-EL\",\"PS-INF\",\"TR-COFMAC-001\"]↵\n_token: 0xdeadbeef!0x8badfood!0xfeedfacecafebeefx.01123581321345589144233377610↵\n_userId: 005HnXXXXXXXXXXXXX\n\n ```\n\n## Variables\n\n> ⚠️ **Note**: You must set up your environment variables correctly for all of this to work. Collection variables are typically calculated and assigned between requests (in the **Test** tab script) and used in subsequent requests. The naming convention used in the collection is to prefix collection variable keys with an underscore like `_tomsVariableKey` while an environment variable should not contain an underscore. Example: `tomsVariableKey`. I would never recommend writing to environment variables at runtime. My approach is to keep these consistent across the collection and all folders across the collection and use them only when changing orgs, storefronts or users. \n  \n\nThese are some _bad_ examples. You shouldn't see calls like these in the collection and it's strongly recommended that you do not create them this way to avoid needless debugging:\n\n1. `pm.collectionVariables.set('myVariable', 'My new value');`\n2. `pm.collectionVariables.get('myVariable');`\n3. `pm.environment.set('_myVariable', 'My new value');`\n4. `pm.environment.get('_myVariable');`\n    \n\nThese are good examples as they adhere to the established naming convention and it's clear which dictionary we're using when the name is seen in the Console:\n\n1. `pm.collectionVariables.set('_myVariable', 'My new value');`\n2. `pm.collectionVariables.get('_myVariable');`\n3. `pm.environment.set('myVariable', 'My new value');`\n4. `pm.environment.get('myVariable');`\n    \n\nEvery coder has their preferences and principles. I don't like mixing sources like dictionaries for retrieving a value by key. A value with an underscore prefix in this naming convention should correspond to pm.collectionVariables and one without should come from pm.environment. I don't use a context stand-in object that allows pulling or pushing a value by key from either pm.collectionVariables or pm.environment at runtime. I believe strongly that a few coding principals such as singular definition and not coding by coincidence - even with tests, and especially with tests can save time. If those terms are not familiar I'd like to recommend the book \"The Pragmatic Programmer\" as it could replace many on your shelf or device.\n\n### Input values\n\n#### Some Environment variables are used for lookups to support reuse\n\nThese are some examples:\n\n1. webstoreName (resolves to a WebStore Id)\n2. buyerAccountName (resolves to an Account Id)\n    \n\n#### Some Environment variables can be used to provide comma delimited values\n\n1. productNamesCommaDelimited (resolves to a list of Product2 Ids)\n2. productStockKeepingUnitsCommaDelimited (used in OCI Postman collection)\n3. locationGroupIdentifiersCommaDelimited (used in OCI Postman collection)\n4. locationIdentifiersCommaDelimited (used in OCI Postman collection)\n    \n\n#### Some Environment variables can be used to provide a single string value\n\n1. productSearchTerm\n    \n\n## Standardized variables\n\n⚠️ **Note**: The naming convention found here is used across other Salesforce Commerce product Postman collections in the Partner Readiness space when possible to support reuse and collaboration.\n\nThis Postman collection relies on the following variables:\n\n| Name | Description | Location |\n| --- | --- | --- |\n| `orgLoginUrl` | Either `https://login.salesforce.com` (production/trial) or `https://test.salesforce.com` (sandbox) | User supplied |\n| `orgHost` | Protocol and host portion of the Salesforce org's URL | User supplied. Example: `https://yourusername-august.lightning.force.com` |\n| `orgAdminUsername` | The System Administrator username for the Salesforce org | User supplied |\n| `orgAdminPassword` | The System Administrator password for the Salesforce org | User supplied |\n| `orgAdminSecurityToken` | The security token for the Salesforce Org System Administrator User | Autogenerated |\n| `orgHostMySalesforceFormat` | The protocol and host portion of the Salesforce org's URL in 'my.salesforce.com' format. Useful for avoiding redirection problems and 'Invalid Session Id' errors post authentication | User supplied. Example: `https://yourusername-august.my.salesforce.com` |\n| `orgId` | The Salesforce.com Organization ID for the Salesforce org | Setup > Company Information |\n| `apiVersion` | The Salesforce API version (e.g. 58.0). | User supplied. Most recent value recommended. |\n| `connectedAppConsumerKey` | The Consumer Secret value for the Connected App in the Salesforce org. | Setup > App Manager > Connected App Record > View > Manage Consumer Details |\n| `connectedAppConsumerSecret` | The Consumer Secret value in the Connected App. | Setup > App Manager > Connected App Record > View > Manage Consumer Details |\n| `webstoreName` | Name of the webstore used to look up a corresponding Id | The value specified when the store / site was created such as 'B2B LWR Enhanced Store from TSO.' Can be found in the Commerce App under 'Stores.' |\n| `buyerUsername` | Registered B2B Buyer User's username. | User supplied. |\n| `buyerPassword` | Registered B2B Buyer User's password. | User supplied. |\n| `buyerAccountName` | Name of the Account used to look up the Account Id which is tied to the Buyer User. | User supplied. Example: `United Coffee Bean Corp` |\n| `productNamesCommaDelimited` | Comma-delimited list of product names which are resolved to Ids. | User supplied: Example `Testa Rossa Coffee Machine (Sample),Capricorn I Group Espresso Machine (Sample)` |\n| `productSearchTerm` | The search term to use for a Happy Path | User supplied: Example `Coffee` |\n| `currencyIsoCode` | The currency code for the cart. | User supplied: Example `USD` for United States Dollar |\n\nPlease consult the Partner Learning Camp B2B Commerce curriculum and course documentation for additional details.\n\nEnjoy the collection!\n\n- Tom Zarr ([tzarr@salesforce.com](https://mailto:tzarr@salesforce.com)) October, 2023",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "8399406"
 	},
@@ -6332,718 +6332,6 @@
 			]
 		},
 		{
-			"name": "Deployment",
-			"item": [
-				{
-					"name": "External Services (Sketch)",
-					"item": [
-						{
-							"name": "Inventory",
-							"item": []
-						},
-						{
-							"name": "Tax",
-							"item": []
-						},
-						{
-							"name": "Shipment",
-							"item": []
-						},
-						{
-							"name": "Payment",
-							"item": [
-								{
-									"name": "Mock Payment Setup",
-									"item": [
-										{
-											"name": "1. Clear Collection Variables",
-											"event": [
-												{
-													"listen": "prerequest",
-													"script": {
-														"exec": [
-															"console.log('1. Clear Collection Variables Pre-request Script...');\r",
-															"\r",
-															"// Check for environment selection\r",
-															"if(pm.environment.name === undefined) {\r",
-															"    const msg = 'No Postman environment selected or set.';\r",
-															"    pm.expect.fail(msg);\r",
-															"}\r",
-															"\r",
-															"// Clean up the variables from the collection set throughout the various calls\r",
-															"pm.collectionVariables.clear();"
-														],
-														"type": "text/javascript"
-													}
-												},
-												{
-													"listen": "test",
-													"script": {
-														"exec": [
-															"console.log('1. Clear Collection Variables Tests...');\r",
-															"\r",
-															"pm.test('Make sure collection variables are clean', () => {\r",
-															"    pm.expect(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value)).to.be.an('array').empty;\r",
-															"});"
-														],
-														"type": "text/javascript"
-													}
-												}
-											],
-											"request": {
-												"method": "GET",
-												"header": [],
-												"url": {
-													"raw": "postman-echo.com/get",
-													"host": [
-														"postman-echo",
-														"com"
-													],
-													"path": [
-														"get"
-													]
-												}
-											},
-											"response": []
-										},
-										{
-											"name": "2. Log in as System Administrator (SOAP)",
-											"event": [
-												{
-													"listen": "test",
-													"script": {
-														"exec": [
-															"console.log('2. Log in as System Administrator Tests...');\r",
-															"\r",
-															"pm.test('Status code is 200', () => {\r",
-															"    pm.response.to.have.status(200);\r",
-															"});\r",
-															"\r",
-															"pm.test('Validate the access token is found in the body and save it to the variables', () => {\r",
-															"    const result = xml2Json(pm.response.text())['soapenv:Envelope']['soapenv:Body'].loginResponse.result;\r",
-															"    const url = result.serverUrl.split('/');\r",
-															"\r",
-															"    pm.expect(result.sessionId).to.exist;\r",
-															"    pm.expect(result.sessionId).to.be.a.string;\r",
-															"\r",
-															"    pm.collectionVariables.set('_token', result.sessionId);\r",
-															"    pm.collectionVariables.set('_instanceUrl', url[0] + '//' + url[2]);\r",
-															"    pm.collectionVariables.set('_userId', result.userId);\r",
-															"    pm.collectionVariables.set('_orgId', result.userInfo.organizationId);\r",
-															"});"
-														],
-														"type": "text/javascript"
-													}
-												},
-												{
-													"listen": "prerequest",
-													"script": {
-														"exec": [
-															"console.log('2. Log in as System Administrator Pre-request Script...');\r",
-															"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
-															"\r",
-															"['orgLoginUrl','apiVersion'].forEach(esiev => {\r",
-															"    if(!pm.environment.has(esiev)) {\r",
-															"        const msg = 'Expected Postman environment variable not found: ' + esiev;\r",
-															"        pm.expect.fail(msg);\r",
-															"    }\r",
-															"    pm.expect(pm.environment.get(esiev)).to.exist;\r",
-															"    pm.expect(pm.environment.get(esiev)).to.be.an('string');\r",
-															"});"
-														],
-														"type": "text/javascript"
-													}
-												}
-											],
-											"request": {
-												"auth": {
-													"type": "noauth"
-												},
-												"method": "POST",
-												"header": [
-													{
-														"key": "Content-Type",
-														"value": "text/xml; charset=UTF-8",
-														"type": "text"
-													},
-													{
-														"key": "SOAPAction",
-														"value": "login",
-														"type": "text"
-													},
-													{
-														"key": "Accept",
-														"value": "text/xml",
-														"type": "text"
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\r\n<env:Envelope xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\r\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n    xmlns:n1=\"urn:partner.soap.sforce.com\"\r\n    xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n    <env:Body>\r\n        <n1:login>\r\n            <n1:username><![CDATA[{{orgAdminUsername}}]]></n1:username>\r\n            <n1:password><![CDATA[{{orgAdminPassword}}]]></n1:password>\r\n        </n1:login>\r\n    </env:Body>\r\n</env:Envelope>"
-												},
-												"url": {
-													"raw": "{{orgLoginUrl}}/services/Soap/u/{{apiVersion}}",
-													"host": [
-														"{{orgLoginUrl}}"
-													],
-													"path": [
-														"services",
-														"Soap",
-														"u",
-														"{{apiVersion}}"
-													]
-												}
-											},
-											"response": []
-										},
-										{
-											"name": "2. Create Collection Variables",
-											"event": [
-												{
-													"listen": "prerequest",
-													"script": {
-														"exec": [
-															"console.log('2. Create Collection Variables Pre-request Script...');\r",
-															"\r",
-															"pm.collectionVariables.set('_namedCredentialLabel', 'Test_NC');\r",
-															"pm.collectionVariables.set('_paymentGatewayProviderApexClassName', '');\r",
-															"pm.collectionVariables.set('_namedCredentialDeveloperName', '');\r",
-															"pm.collectionVariables.set('_paymentGatewayProviderDeveloperName', '');\r",
-															"pm.collectionVariables.set('_paymentGatewayName', '');\r",
-															"pm.collectionVariables.set('_paymentGatewayExternalReference', '');"
-														],
-														"type": "text/javascript"
-													}
-												},
-												{
-													"listen": "test",
-													"script": {
-														"exec": [
-															"console.log('2. Create Collection Variables Pre-request Script...');\r",
-															"\r",
-															"pm.test('Make sure collection variables are clean', () => {\r",
-															"    pm.expect(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value)).to.be.an('array').not.empty;\r",
-															"});\r",
-															"\r",
-															"['orgLoginUrl','apiVersion'].forEach(esiev => {\r",
-															"    if(!pm.environment.has(esiev)) {\r",
-															"        const msg = 'Expected Postman environment variable not found: ' + esiev;\r",
-															"        pm.expect.fail(msg);\r",
-															"    }\r",
-															"    pm.expect(pm.environment.get(esiev)).to.exist;\r",
-															"    pm.expect(pm.environment.get(esiev)).to.be.an('string');\r",
-															"});\r",
-															"\r",
-															"['_namedCredentialLabel', '_paymentGatewayProviderApexClassName', '_namedCredentialDeveloperName','_paymentGatewayProviderDeveloperName', '_paymentGatewayName','_paymentGatewayExternalReference'].forEach(esicv => {\r",
-															"    if(!pm.collectionVariables.has(esicv)) {\r",
-															"        const msg = 'Expected Postman environment variable not found: ' + esicv;\r",
-															"        pm.expect.fail(msg);\r",
-															"    }\r",
-															"    pm.expect(pm.collectionVariables.get(esicv)).to.exist;\r",
-															"    pm.expect(pm.collectionVariables.get(esicv)).to.be.an('string');\r",
-															"});"
-														],
-														"type": "text/javascript"
-													}
-												}
-											],
-											"request": {
-												"method": "GET",
-												"header": [],
-												"url": {
-													"raw": "postman-echo.com/get",
-													"host": [
-														"postman-echo",
-														"com"
-													],
-													"path": [
-														"get"
-													]
-												}
-											},
-											"response": []
-										},
-										{
-											"name": "3. Get Named Credentials",
-											"event": [
-												{
-													"listen": "prerequest",
-													"script": {
-														"exec": [
-															"console.log('3. Deploy Named Credentials Pre-request Script...');\r",
-															"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
-															"\r",
-															"['orgLoginUrl','apiVersion'].forEach(esiev => {\r",
-															"    if(!pm.environment.has(esiev)) {\r",
-															"        const msg = 'Expected Postman environment variable not found: ' + esiev;\r",
-															"        pm.expect.fail(msg);\r",
-															"    }\r",
-															"    pm.expect(pm.environment.get(esiev)).to.exist;\r",
-															"    pm.expect(pm.environment.get(esiev)).to.be.an('string');\r",
-															"});"
-														],
-														"type": "text/javascript"
-													}
-												},
-												{
-													"listen": "test",
-													"script": {
-														"exec": [
-															"console.log('3. Deploy Named Credentials Tests...');\r",
-															"\r",
-															"pm.test('Status code is 200', () => {\r",
-															"    //pm.response.to.have.status(200);\r",
-															"});\r",
-															"\r",
-															"pm.test('Validate the access token is found in the body and save it to the variables', () => {\r",
-															"    /*\r",
-															"    const result = xml2Json(pm.response.text())['soapenv:Envelope']['soapenv:Body'].loginResponse.result;\r",
-															"    const url = result.serverUrl.split('/');\r",
-															"\r",
-															"    pm.expect(result.sessionId).to.exist;\r",
-															"    pm.expect(result.sessionId).to.be.a.string;\r",
-															"\r",
-															"    pm.collectionVariables.set('_token', result.sessionId);\r",
-															"    pm.collectionVariables.set('_instanceUrl', url[0] + '//' + url[2]);\r",
-															"    pm.collectionVariables.set('_userId', result.userId);\r",
-															"    pm.collectionVariables.set('_orgId', result.userInfo.organizationId);\r",
-															"    */\r",
-															"});"
-														],
-														"type": "text/javascript"
-													}
-												}
-											],
-											"request": {
-												"method": "GET",
-												"header": [],
-												"url": {
-													"raw": "postman-echo.com/get",
-													"host": [
-														"postman-echo",
-														"com"
-													],
-													"path": [
-														"get"
-													]
-												}
-											},
-											"response": []
-										},
-										{
-											"name": "4. Create Payment Gateway Provider",
-											"event": [
-												{
-													"listen": "test",
-													"script": {
-														"exec": [
-															"console.log('4. Create Payment Gateway Provider Tests...');",
-															"",
-															"pm.test('Status code is 200', () => {",
-															"    pm.response.to.have.status(200);",
-															"});",
-															"",
-															"pm.test('Response is valid and has a JSON body', () => {",
-															"     pm.response.to.be.success;",
-															"     pm.response.to.be.withBody;",
-															"     pm.response.to.be.json;",
-															"});",
-															"",
-															"pm.test('Validate result and save collection variables', () => {",
-															"    let data = pm.response.json();",
-															"    const paymentGatewayProvider = data.compositeResponse.find((result) => result.referenceId === 'paymentGatewayProvider');",
-															"    pm.expect(paymentGatewayProvider).to.exist;",
-															"    pm.expect(paymentGatewayProvider.body).to.exist;",
-															"    pm.expect(paymentGatewayProvider.body.id).to.exist;",
-															"    pm.expect(paymentGatewayProvider.body.id).to.be.a.string;",
-															"    pm.collectionVariables.set('_paymentGatewayProviderId', paymentGatewayProvider.body.id);",
-															"});"
-														],
-														"type": "text/javascript"
-													}
-												},
-												{
-													"listen": "prerequest",
-													"script": {
-														"exec": [
-															"console.log('4. Create Payment Gateway Provider Pre-request Script...');\r",
-															"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));"
-														],
-														"type": "text/javascript"
-													}
-												}
-											],
-											"request": {
-												"auth": {
-													"type": "bearer",
-													"bearer": [
-														{
-															"key": "token",
-															"value": "{{_accessToken}}",
-															"type": "string"
-														}
-													]
-												},
-												"method": "POST",
-												"header": [],
-												"body": {
-													"mode": "raw",
-													"raw": "{\n    \"allOrNone\": true,\n    \"compositeRequest\": [\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVersion}}/query/?q=SELECT+Id+FROM+ApexClass+WHERE+Name+=+'{{_paymentGatewayProviderApexClassName}}'\",\n            \"referenceId\": \"apexClass\"\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{apiVersion}}/sobjects/PaymentGatewayProvider\",\n            \"referenceId\": \"paymentGatewayProvider\",\n            \"body\": {\n                \"ApexAdapterId\": \"@{apexClass.records[0].Id}\",\n                \"DeveloperName\": \"{{_paymentGatewayProviderDeveloperName}}\",\n                \"MasterLabel\": \"{{_paymentGatewayProviderDeveloperName}}\",\n                \"Language\": \"en_US\",\n                \"IdempotencySupported\": \"Yes\"\n            }\n        }\n    ]\n}",
-													"options": {
-														"raw": {
-															"language": "json"
-														}
-													}
-												},
-												"url": {
-													"raw": "{{orgHostMySalesforceFormat}}/services/data/v{{apiVersion}}/composite",
-													"host": [
-														"{{orgHostMySalesforceFormat}}"
-													],
-													"path": [
-														"services",
-														"data",
-														"v{{apiVersion}}",
-														"composite"
-													]
-												}
-											},
-											"response": []
-										},
-										{
-											"name": "5. Create Payment Gateway",
-											"event": [
-												{
-													"listen": "test",
-													"script": {
-														"exec": [
-															"console.log('5. Create Payment Gateway Tests...');",
-															"",
-															"pm.test('Status code is 200', () => {",
-															"    pm.response.to.have.status(200);",
-															"});",
-															"",
-															"pm.test('Response is valid and has a JSON body', () => {",
-															"     pm.response.to.be.success;",
-															"     pm.response.to.be.withBody;",
-															"     pm.response.to.be.json;",
-															"});",
-															"",
-															"const validateResults = (refId) => {",
-															"    pm.test(`Validate ${refId}`, () => {",
-															"        let data = pm.response.json();",
-															"        const refResult = data.compositeResponse.find((result) => result.referenceId === refId);",
-															"        pm.expect(refResult).to.exist;",
-															"        pm.expect(refResult.body).to.exist;",
-															"        pm.expect(refResult.body.records).to.exist;",
-															"        pm.expect(refResult.body.records).to.be.an('array');",
-															"        pm.expect(refResult.body.records.length).to.eql(1);",
-															"        pm.expect(refResult.body.records[0].Id).to.exist;",
-															"        pm.expect(refResult.body.records[0].Id).to.be.a.string;",
-															"    });",
-															"};",
-															"",
-															"validateResults('apexClass');",
-															"validateResults('namedCredential');",
-															"validateResults('paymentGatewayProvider');",
-															"",
-															"pm.test('Validate paymentGateway', () => {",
-															"    let data = pm.response.json();",
-															"    const paymentGateway = data.compositeResponse.find((result) => result.referenceId === 'paymentGateway');",
-															"    pm.expect(paymentGateway).to.exist;",
-															"    pm.expect(paymentGateway.httpStatusCode).to.eql(201);",
-															"    pm.expect(paymentGateway.body.id).to.exist;",
-															"    pm.expect(paymentGateway.body.id).to.be.a.string;",
-															"    pm.expect(paymentGateway.body.success).to.exist;",
-															"    pm.expect(paymentGateway.body.success).to.eql(true);",
-															"});"
-														],
-														"type": "text/javascript"
-													}
-												},
-												{
-													"listen": "prerequest",
-													"script": {
-														"exec": [
-															"console.log('5. Create Payment Gateway Provider Pre-request Script...');\r",
-															"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));"
-														],
-														"type": "text/javascript"
-													}
-												}
-											],
-											"request": {
-												"auth": {
-													"type": "bearer",
-													"bearer": [
-														{
-															"key": "token",
-															"value": "{{_accessToken}}",
-															"type": "string"
-														}
-													]
-												},
-												"method": "POST",
-												"header": [],
-												"body": {
-													"mode": "raw",
-													"raw": "{\n    \"allOrNone\": true,\n    \"compositeRequest\": [\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVersion}}/query/?q=SELECT+Id+FROM+ApexClass+WHERE+Name+=+'{{_paymentGatewayProviderApexClassName}}'+LIMIT+1\",\n            \"referenceId\": \"apexClass\"\n        },\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVversion}}/query/?q=SELECT+Id+FROM+NamedCredential+WHERE+DeveloperName+=+'{{_namedCredentialDeveloperName}}'+LIMIT+1\",\n            \"referenceId\": \"namedCredential\"\n        },\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVersion}}/query/?q=SELECT+Id+FROM+PaymentGatewayProvider+WHERE+ApexAdapterId+=+'@{apexClass.records[0].Id}'+AND+DeveloperName+=+'{{_paymentGatewayProviderDeveloperName}}'+LIMIT+1\",\n            \"referenceId\": \"paymentGatewayProvider\"\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{apiVersion}}/sobjects/PaymentGateway\",\n            \"referenceId\": \"paymentGateway\",\n            \"body\": {\n                \"PaymentGatewayProviderId\": \"@{paymentGatewayProvider.records[0].Id}\",\n                \"MerchantCredentialId\": \"@{namedCredential.records[0].Id}\",\n                \"Status\": \"Active\",\n                \"PaymentGatewayName\": \"{{_paymentGatewayName}}\",\n                \"ExternalReference\": \"{{_paymentGatewayExternalReference}}\"\n            }\n        }\n    ]\n}",
-													"options": {
-														"raw": {
-															"language": "json"
-														}
-													}
-												},
-												"url": {
-													"raw": "{{orgHostMySalesforceFormat}}/services/data/v{{apiVersion}}/composite",
-													"host": [
-														"{{orgHostMySalesforceFormat}}"
-													],
-													"path": [
-														"services",
-														"data",
-														"v{{apiVersion}}",
-														"composite"
-													]
-												}
-											},
-											"response": []
-										},
-										{
-											"name": "6. Query Payment Gateway",
-											"event": [
-												{
-													"listen": "test",
-													"script": {
-														"exec": [
-															"console.log('6. Query Payment Gateway Tests...');",
-															"",
-															"pm.test('Status code is 200', () => {",
-															"    pm.response.to.have.status(200);",
-															"});",
-															"",
-															"pm.test('Response is valid and has a JSON body', () => {",
-															"     pm.response.to.be.success;",
-															"     pm.response.to.be.withBody;",
-															"     pm.response.to.be.json;",
-															"});",
-															"",
-															"const validateResults = (refId) => {",
-															"    pm.test(`Validate ${refId}`, () => {",
-															"        let data = pm.response.json();",
-															"        const refResult = data.compositeResponse.find((result) => result.referenceId === refId);",
-															"        pm.expect(refResult).to.exist;",
-															"        pm.expect(refResult.body).to.exist;",
-															"        pm.expect(refResult.body.records).to.exist;",
-															"        pm.expect(refResult.body.records).to.be.an('array');",
-															"        pm.expect(refResult.body.records.length).to.eql(1);",
-															"        pm.expect(refResult.body.records[0].Id).to.exist;",
-															"        pm.expect(refResult.body.records[0].Id).to.be.a.string;",
-															"    });",
-															"};",
-															"",
-															"validateResults('apexClass');",
-															"validateResults('namedCredential');",
-															"validateResults('paymentGatewayProvider');",
-															"validateResults('paymentGateway');"
-														],
-														"type": "text/javascript"
-													}
-												},
-												{
-													"listen": "prerequest",
-													"script": {
-														"exec": [
-															"console.log('6. Query Payment Gateway Provider Pre-request Script...');\r",
-															"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));"
-														],
-														"type": "text/javascript"
-													}
-												}
-											],
-											"request": {
-												"auth": {
-													"type": "bearer",
-													"bearer": [
-														{
-															"key": "token",
-															"value": "{{_accessToken}}",
-															"type": "string"
-														}
-													]
-												},
-												"method": "POST",
-												"header": [
-													{
-														"key": "Content-Type",
-														"value": "application/json",
-														"type": "text"
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": "{\n    \"allOrNone\": true,\n    \"compositeRequest\": [\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVersion}}/query/?q=SELECT+Id,+Name,+Status,+ApiVersion+FROM+ApexClass+WHERE+Name+=+'{{_paymentGatewayProviderApexClassName}}'+LIMIT+1\",\n            \"referenceId\": \"apexClass\"\n        },\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVersion}}/query/?q=SELECT+Id,+DeveloperName,+Endpoint+FROM+NamedCredential+WHERE+DeveloperName+=+'{{_namedCredentialDeveloperName}}'+LIMIT+1\",\n            \"referenceId\": \"namedCredential\"\n        },\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVersion}}/query/?q=SELECT+Id,+DeveloperName,+MasterLabel,+ApexAdapterId,+IdempotencySupported,+Language+FROM+PaymentGatewayProvider+WHERE+ApexAdapterId+=+'@{apexClass.records[0].Id}'+AND+DeveloperName+=+'{{_paymentGatewayProviderDeveloperName}}'+LIMIT+1\",\n            \"referenceId\": \"paymentGatewayProvider\"\n        },\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVersion}}/query/?q=SELECT+Id,ExternalReference+FROM+PaymentGateway+WHERE+PaymentGatewayProviderId+=+'@{paymentGatewayProvider.records[0].Id}'+AND+MerchantCredentialId+=+'@{namedCredential.records[0].Id}'+AND+PaymentGatewayName+=+'{{_paymentGatewayName}}'+AND+Status+='Active'+LIMIT+1\",\n            \"referenceId\": \"paymentGateway\"\n        }\n    ]\n}"
-												},
-												"url": {
-													"raw": "{{orgHostMySalesforceFormat}}/services/data/v{{apiVersion}}/composite",
-													"host": [
-														"{{orgHostMySalesforceFormat}}"
-													],
-													"path": [
-														"services",
-														"data",
-														"v{{apiVersion}}",
-														"composite"
-													]
-												}
-											},
-											"response": []
-										}
-									]
-								},
-								{
-									"name": "Stripe (not Salesforce Payments)",
-									"item": [
-										{
-											"name": "1. Clear Collection Variables Copy",
-											"event": [
-												{
-													"listen": "prerequest",
-													"script": {
-														"exec": [
-															"console.log('1. Clear Collection Variables Pre-request Script...');\r",
-															"\r",
-															"// Check for environment selection\r",
-															"if(pm.environment.name === undefined) {\r",
-															"    const msg = 'No Postman environment selected or set.';\r",
-															"    pm.expect.fail(msg);\r",
-															"}\r",
-															"\r",
-															"// Clean up the variables from the collection set throughout the various calls\r",
-															"pm.collectionVariables.clear();"
-														],
-														"type": "text/javascript"
-													}
-												},
-												{
-													"listen": "test",
-													"script": {
-														"exec": [
-															"console.log('1. Clear Collection Variables Tests...');\r",
-															"\r",
-															"pm.test('Make sure collection variables are clean', () => {\r",
-															"    pm.expect(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value)).to.be.an('array').empty;\r",
-															"});"
-														],
-														"type": "text/javascript"
-													}
-												}
-											],
-											"request": {
-												"method": "GET",
-												"header": [],
-												"url": {
-													"raw": "postman-echo.com/get",
-													"host": [
-														"postman-echo",
-														"com"
-													],
-													"path": [
-														"get"
-													]
-												}
-											},
-											"response": []
-										},
-										{
-											"name": "1. Deploy Stripe Example Copy",
-											"request": {
-												"method": "GET",
-												"header": []
-											},
-											"response": []
-										}
-									]
-								}
-							]
-						},
-						{
-							"name": "1. Clear Collection Variables",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"console.log('1. Clear Collection Variables Pre-request Script...');\r",
-											"\r",
-											"// Check for environment selection\r",
-											"if(pm.environment.name === undefined) {\r",
-											"    const msg = 'No Postman environment selected or set.';\r",
-											"    pm.expect.fail(msg);\r",
-											"}\r",
-											"\r",
-											"// Clean up the variables from the collection set throughout the various calls\r",
-											"pm.collectionVariables.clear();"
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"console.log('1. Clear Collection Variables Tests...');\r",
-											"\r",
-											"pm.test('Make sure collection variables are clean', () => {\r",
-											"    pm.expect(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value)).to.be.an('array').empty;\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "postman-echo.com/get",
-									"host": [
-										"postman-echo",
-										"com"
-									],
-									"path": [
-										"get"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "New Request",
-							"request": {
-								"method": "GET",
-								"header": []
-							},
-							"response": []
-						}
-					]
-				}
-			]
-		},
-		{
-			"name": "Search Operations",
-			"item": [
-				{
-					"name": "1. Start Reindex",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Checkout",
 			"item": [
 				{
@@ -10674,6 +9962,718 @@
 							"response": []
 						}
 					]
+				}
+			]
+		},
+		{
+			"name": "Deployment",
+			"item": [
+				{
+					"name": "External Services (Sketch)",
+					"item": [
+						{
+							"name": "Inventory",
+							"item": []
+						},
+						{
+							"name": "Tax",
+							"item": []
+						},
+						{
+							"name": "Shipment",
+							"item": []
+						},
+						{
+							"name": "Payment",
+							"item": [
+								{
+									"name": "Mock Payment Setup",
+									"item": [
+										{
+											"name": "1. Clear Collection Variables",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"console.log('1. Clear Collection Variables Pre-request Script...');\r",
+															"\r",
+															"// Check for environment selection\r",
+															"if(pm.environment.name === undefined) {\r",
+															"    const msg = 'No Postman environment selected or set.';\r",
+															"    pm.expect.fail(msg);\r",
+															"}\r",
+															"\r",
+															"// Clean up the variables from the collection set throughout the various calls\r",
+															"pm.collectionVariables.clear();"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"console.log('1. Clear Collection Variables Tests...');\r",
+															"\r",
+															"pm.test('Make sure collection variables are clean', () => {\r",
+															"    pm.expect(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value)).to.be.an('array').empty;\r",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "postman-echo.com/get",
+													"host": [
+														"postman-echo",
+														"com"
+													],
+													"path": [
+														"get"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "2. Log in as System Administrator (SOAP)",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"console.log('2. Log in as System Administrator Tests...');\r",
+															"\r",
+															"pm.test('Status code is 200', () => {\r",
+															"    pm.response.to.have.status(200);\r",
+															"});\r",
+															"\r",
+															"pm.test('Validate the access token is found in the body and save it to the variables', () => {\r",
+															"    const result = xml2Json(pm.response.text())['soapenv:Envelope']['soapenv:Body'].loginResponse.result;\r",
+															"    const url = result.serverUrl.split('/');\r",
+															"\r",
+															"    pm.expect(result.sessionId).to.exist;\r",
+															"    pm.expect(result.sessionId).to.be.a.string;\r",
+															"\r",
+															"    pm.collectionVariables.set('_token', result.sessionId);\r",
+															"    pm.collectionVariables.set('_instanceUrl', url[0] + '//' + url[2]);\r",
+															"    pm.collectionVariables.set('_userId', result.userId);\r",
+															"    pm.collectionVariables.set('_orgId', result.userInfo.organizationId);\r",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"console.log('2. Log in as System Administrator Pre-request Script...');\r",
+															"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
+															"\r",
+															"['orgLoginUrl','apiVersion'].forEach(esiev => {\r",
+															"    if(!pm.environment.has(esiev)) {\r",
+															"        const msg = 'Expected Postman environment variable not found: ' + esiev;\r",
+															"        pm.expect.fail(msg);\r",
+															"    }\r",
+															"    pm.expect(pm.environment.get(esiev)).to.exist;\r",
+															"    pm.expect(pm.environment.get(esiev)).to.be.an('string');\r",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"auth": {
+													"type": "noauth"
+												},
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "text/xml; charset=UTF-8",
+														"type": "text"
+													},
+													{
+														"key": "SOAPAction",
+														"value": "login",
+														"type": "text"
+													},
+													{
+														"key": "Accept",
+														"value": "text/xml",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\r\n<env:Envelope xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\r\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n    xmlns:n1=\"urn:partner.soap.sforce.com\"\r\n    xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n    <env:Body>\r\n        <n1:login>\r\n            <n1:username><![CDATA[{{orgAdminUsername}}]]></n1:username>\r\n            <n1:password><![CDATA[{{orgAdminPassword}}]]></n1:password>\r\n        </n1:login>\r\n    </env:Body>\r\n</env:Envelope>"
+												},
+												"url": {
+													"raw": "{{orgLoginUrl}}/services/Soap/u/{{apiVersion}}",
+													"host": [
+														"{{orgLoginUrl}}"
+													],
+													"path": [
+														"services",
+														"Soap",
+														"u",
+														"{{apiVersion}}"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "2. Create Collection Variables",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"console.log('2. Create Collection Variables Pre-request Script...');\r",
+															"\r",
+															"pm.collectionVariables.set('_namedCredentialLabel', 'Test_NC');\r",
+															"pm.collectionVariables.set('_paymentGatewayProviderApexClassName', '');\r",
+															"pm.collectionVariables.set('_namedCredentialDeveloperName', '');\r",
+															"pm.collectionVariables.set('_paymentGatewayProviderDeveloperName', '');\r",
+															"pm.collectionVariables.set('_paymentGatewayName', '');\r",
+															"pm.collectionVariables.set('_paymentGatewayExternalReference', '');"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"console.log('2. Create Collection Variables Pre-request Script...');\r",
+															"\r",
+															"pm.test('Make sure collection variables are clean', () => {\r",
+															"    pm.expect(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value)).to.be.an('array').not.empty;\r",
+															"});\r",
+															"\r",
+															"['orgLoginUrl','apiVersion'].forEach(esiev => {\r",
+															"    if(!pm.environment.has(esiev)) {\r",
+															"        const msg = 'Expected Postman environment variable not found: ' + esiev;\r",
+															"        pm.expect.fail(msg);\r",
+															"    }\r",
+															"    pm.expect(pm.environment.get(esiev)).to.exist;\r",
+															"    pm.expect(pm.environment.get(esiev)).to.be.an('string');\r",
+															"});\r",
+															"\r",
+															"['_namedCredentialLabel', '_paymentGatewayProviderApexClassName', '_namedCredentialDeveloperName','_paymentGatewayProviderDeveloperName', '_paymentGatewayName','_paymentGatewayExternalReference'].forEach(esicv => {\r",
+															"    if(!pm.collectionVariables.has(esicv)) {\r",
+															"        const msg = 'Expected Postman environment variable not found: ' + esicv;\r",
+															"        pm.expect.fail(msg);\r",
+															"    }\r",
+															"    pm.expect(pm.collectionVariables.get(esicv)).to.exist;\r",
+															"    pm.expect(pm.collectionVariables.get(esicv)).to.be.an('string');\r",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "postman-echo.com/get",
+													"host": [
+														"postman-echo",
+														"com"
+													],
+													"path": [
+														"get"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "3. Get Named Credentials",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"console.log('3. Deploy Named Credentials Pre-request Script...');\r",
+															"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));\r",
+															"\r",
+															"['orgLoginUrl','apiVersion'].forEach(esiev => {\r",
+															"    if(!pm.environment.has(esiev)) {\r",
+															"        const msg = 'Expected Postman environment variable not found: ' + esiev;\r",
+															"        pm.expect.fail(msg);\r",
+															"    }\r",
+															"    pm.expect(pm.environment.get(esiev)).to.exist;\r",
+															"    pm.expect(pm.environment.get(esiev)).to.be.an('string');\r",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"console.log('3. Deploy Named Credentials Tests...');\r",
+															"\r",
+															"pm.test('Status code is 200', () => {\r",
+															"    //pm.response.to.have.status(200);\r",
+															"});\r",
+															"\r",
+															"pm.test('Validate the access token is found in the body and save it to the variables', () => {\r",
+															"    /*\r",
+															"    const result = xml2Json(pm.response.text())['soapenv:Envelope']['soapenv:Body'].loginResponse.result;\r",
+															"    const url = result.serverUrl.split('/');\r",
+															"\r",
+															"    pm.expect(result.sessionId).to.exist;\r",
+															"    pm.expect(result.sessionId).to.be.a.string;\r",
+															"\r",
+															"    pm.collectionVariables.set('_token', result.sessionId);\r",
+															"    pm.collectionVariables.set('_instanceUrl', url[0] + '//' + url[2]);\r",
+															"    pm.collectionVariables.set('_userId', result.userId);\r",
+															"    pm.collectionVariables.set('_orgId', result.userInfo.organizationId);\r",
+															"    */\r",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "postman-echo.com/get",
+													"host": [
+														"postman-echo",
+														"com"
+													],
+													"path": [
+														"get"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "4. Create Payment Gateway Provider",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"console.log('4. Create Payment Gateway Provider Tests...');",
+															"",
+															"pm.test('Status code is 200', () => {",
+															"    pm.response.to.have.status(200);",
+															"});",
+															"",
+															"pm.test('Response is valid and has a JSON body', () => {",
+															"     pm.response.to.be.success;",
+															"     pm.response.to.be.withBody;",
+															"     pm.response.to.be.json;",
+															"});",
+															"",
+															"pm.test('Validate result and save collection variables', () => {",
+															"    let data = pm.response.json();",
+															"    const paymentGatewayProvider = data.compositeResponse.find((result) => result.referenceId === 'paymentGatewayProvider');",
+															"    pm.expect(paymentGatewayProvider).to.exist;",
+															"    pm.expect(paymentGatewayProvider.body).to.exist;",
+															"    pm.expect(paymentGatewayProvider.body.id).to.exist;",
+															"    pm.expect(paymentGatewayProvider.body.id).to.be.a.string;",
+															"    pm.collectionVariables.set('_paymentGatewayProviderId', paymentGatewayProvider.body.id);",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"console.log('4. Create Payment Gateway Provider Pre-request Script...');\r",
+															"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{_accessToken}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"allOrNone\": true,\n    \"compositeRequest\": [\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVersion}}/query/?q=SELECT+Id+FROM+ApexClass+WHERE+Name+=+'{{_paymentGatewayProviderApexClassName}}'\",\n            \"referenceId\": \"apexClass\"\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{apiVersion}}/sobjects/PaymentGatewayProvider\",\n            \"referenceId\": \"paymentGatewayProvider\",\n            \"body\": {\n                \"ApexAdapterId\": \"@{apexClass.records[0].Id}\",\n                \"DeveloperName\": \"{{_paymentGatewayProviderDeveloperName}}\",\n                \"MasterLabel\": \"{{_paymentGatewayProviderDeveloperName}}\",\n                \"Language\": \"en_US\",\n                \"IdempotencySupported\": \"Yes\"\n            }\n        }\n    ]\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{orgHostMySalesforceFormat}}/services/data/v{{apiVersion}}/composite",
+													"host": [
+														"{{orgHostMySalesforceFormat}}"
+													],
+													"path": [
+														"services",
+														"data",
+														"v{{apiVersion}}",
+														"composite"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "5. Create Payment Gateway",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"console.log('5. Create Payment Gateway Tests...');",
+															"",
+															"pm.test('Status code is 200', () => {",
+															"    pm.response.to.have.status(200);",
+															"});",
+															"",
+															"pm.test('Response is valid and has a JSON body', () => {",
+															"     pm.response.to.be.success;",
+															"     pm.response.to.be.withBody;",
+															"     pm.response.to.be.json;",
+															"});",
+															"",
+															"const validateResults = (refId) => {",
+															"    pm.test(`Validate ${refId}`, () => {",
+															"        let data = pm.response.json();",
+															"        const refResult = data.compositeResponse.find((result) => result.referenceId === refId);",
+															"        pm.expect(refResult).to.exist;",
+															"        pm.expect(refResult.body).to.exist;",
+															"        pm.expect(refResult.body.records).to.exist;",
+															"        pm.expect(refResult.body.records).to.be.an('array');",
+															"        pm.expect(refResult.body.records.length).to.eql(1);",
+															"        pm.expect(refResult.body.records[0].Id).to.exist;",
+															"        pm.expect(refResult.body.records[0].Id).to.be.a.string;",
+															"    });",
+															"};",
+															"",
+															"validateResults('apexClass');",
+															"validateResults('namedCredential');",
+															"validateResults('paymentGatewayProvider');",
+															"",
+															"pm.test('Validate paymentGateway', () => {",
+															"    let data = pm.response.json();",
+															"    const paymentGateway = data.compositeResponse.find((result) => result.referenceId === 'paymentGateway');",
+															"    pm.expect(paymentGateway).to.exist;",
+															"    pm.expect(paymentGateway.httpStatusCode).to.eql(201);",
+															"    pm.expect(paymentGateway.body.id).to.exist;",
+															"    pm.expect(paymentGateway.body.id).to.be.a.string;",
+															"    pm.expect(paymentGateway.body.success).to.exist;",
+															"    pm.expect(paymentGateway.body.success).to.eql(true);",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"console.log('5. Create Payment Gateway Provider Pre-request Script...');\r",
+															"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{_accessToken}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"allOrNone\": true,\n    \"compositeRequest\": [\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVersion}}/query/?q=SELECT+Id+FROM+ApexClass+WHERE+Name+=+'{{_paymentGatewayProviderApexClassName}}'+LIMIT+1\",\n            \"referenceId\": \"apexClass\"\n        },\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVversion}}/query/?q=SELECT+Id+FROM+NamedCredential+WHERE+DeveloperName+=+'{{_namedCredentialDeveloperName}}'+LIMIT+1\",\n            \"referenceId\": \"namedCredential\"\n        },\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVersion}}/query/?q=SELECT+Id+FROM+PaymentGatewayProvider+WHERE+ApexAdapterId+=+'@{apexClass.records[0].Id}'+AND+DeveloperName+=+'{{_paymentGatewayProviderDeveloperName}}'+LIMIT+1\",\n            \"referenceId\": \"paymentGatewayProvider\"\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{apiVersion}}/sobjects/PaymentGateway\",\n            \"referenceId\": \"paymentGateway\",\n            \"body\": {\n                \"PaymentGatewayProviderId\": \"@{paymentGatewayProvider.records[0].Id}\",\n                \"MerchantCredentialId\": \"@{namedCredential.records[0].Id}\",\n                \"Status\": \"Active\",\n                \"PaymentGatewayName\": \"{{_paymentGatewayName}}\",\n                \"ExternalReference\": \"{{_paymentGatewayExternalReference}}\"\n            }\n        }\n    ]\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{orgHostMySalesforceFormat}}/services/data/v{{apiVersion}}/composite",
+													"host": [
+														"{{orgHostMySalesforceFormat}}"
+													],
+													"path": [
+														"services",
+														"data",
+														"v{{apiVersion}}",
+														"composite"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "6. Query Payment Gateway",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"console.log('6. Query Payment Gateway Tests...');",
+															"",
+															"pm.test('Status code is 200', () => {",
+															"    pm.response.to.have.status(200);",
+															"});",
+															"",
+															"pm.test('Response is valid and has a JSON body', () => {",
+															"     pm.response.to.be.success;",
+															"     pm.response.to.be.withBody;",
+															"     pm.response.to.be.json;",
+															"});",
+															"",
+															"const validateResults = (refId) => {",
+															"    pm.test(`Validate ${refId}`, () => {",
+															"        let data = pm.response.json();",
+															"        const refResult = data.compositeResponse.find((result) => result.referenceId === refId);",
+															"        pm.expect(refResult).to.exist;",
+															"        pm.expect(refResult.body).to.exist;",
+															"        pm.expect(refResult.body.records).to.exist;",
+															"        pm.expect(refResult.body.records).to.be.an('array');",
+															"        pm.expect(refResult.body.records.length).to.eql(1);",
+															"        pm.expect(refResult.body.records[0].Id).to.exist;",
+															"        pm.expect(refResult.body.records[0].Id).to.be.a.string;",
+															"    });",
+															"};",
+															"",
+															"validateResults('apexClass');",
+															"validateResults('namedCredential');",
+															"validateResults('paymentGatewayProvider');",
+															"validateResults('paymentGateway');"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"console.log('6. Query Payment Gateway Provider Pre-request Script...');\r",
+															"console.log('Collection variables before:\\r\\n'.concat(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value).sort().join('\\r\\n')));"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{_accessToken}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"allOrNone\": true,\n    \"compositeRequest\": [\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVersion}}/query/?q=SELECT+Id,+Name,+Status,+ApiVersion+FROM+ApexClass+WHERE+Name+=+'{{_paymentGatewayProviderApexClassName}}'+LIMIT+1\",\n            \"referenceId\": \"apexClass\"\n        },\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVersion}}/query/?q=SELECT+Id,+DeveloperName,+Endpoint+FROM+NamedCredential+WHERE+DeveloperName+=+'{{_namedCredentialDeveloperName}}'+LIMIT+1\",\n            \"referenceId\": \"namedCredential\"\n        },\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVersion}}/query/?q=SELECT+Id,+DeveloperName,+MasterLabel,+ApexAdapterId,+IdempotencySupported,+Language+FROM+PaymentGatewayProvider+WHERE+ApexAdapterId+=+'@{apexClass.records[0].Id}'+AND+DeveloperName+=+'{{_paymentGatewayProviderDeveloperName}}'+LIMIT+1\",\n            \"referenceId\": \"paymentGatewayProvider\"\n        },\n        {\n            \"method\": \"GET\",\n            \"url\": \"/services/data/v{{apiVersion}}/query/?q=SELECT+Id,ExternalReference+FROM+PaymentGateway+WHERE+PaymentGatewayProviderId+=+'@{paymentGatewayProvider.records[0].Id}'+AND+MerchantCredentialId+=+'@{namedCredential.records[0].Id}'+AND+PaymentGatewayName+=+'{{_paymentGatewayName}}'+AND+Status+='Active'+LIMIT+1\",\n            \"referenceId\": \"paymentGateway\"\n        }\n    ]\n}"
+												},
+												"url": {
+													"raw": "{{orgHostMySalesforceFormat}}/services/data/v{{apiVersion}}/composite",
+													"host": [
+														"{{orgHostMySalesforceFormat}}"
+													],
+													"path": [
+														"services",
+														"data",
+														"v{{apiVersion}}",
+														"composite"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Stripe (not Salesforce Payments)",
+									"item": [
+										{
+											"name": "1. Clear Collection Variables Copy",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"console.log('1. Clear Collection Variables Pre-request Script...');\r",
+															"\r",
+															"// Check for environment selection\r",
+															"if(pm.environment.name === undefined) {\r",
+															"    const msg = 'No Postman environment selected or set.';\r",
+															"    pm.expect.fail(msg);\r",
+															"}\r",
+															"\r",
+															"// Clean up the variables from the collection set throughout the various calls\r",
+															"pm.collectionVariables.clear();"
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"console.log('1. Clear Collection Variables Tests...');\r",
+															"\r",
+															"pm.test('Make sure collection variables are clean', () => {\r",
+															"    pm.expect(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value)).to.be.an('array').empty;\r",
+															"});"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "postman-echo.com/get",
+													"host": [
+														"postman-echo",
+														"com"
+													],
+													"path": [
+														"get"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "1. Deploy Stripe Example Copy",
+											"request": {
+												"method": "GET",
+												"header": []
+											},
+											"response": []
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "1. Clear Collection Variables",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"console.log('1. Clear Collection Variables Pre-request Script...');\r",
+											"\r",
+											"// Check for environment selection\r",
+											"if(pm.environment.name === undefined) {\r",
+											"    const msg = 'No Postman environment selected or set.';\r",
+											"    pm.expect.fail(msg);\r",
+											"}\r",
+											"\r",
+											"// Clean up the variables from the collection set throughout the various calls\r",
+											"pm.collectionVariables.clear();"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"console.log('1. Clear Collection Variables Tests...');\r",
+											"\r",
+											"pm.test('Make sure collection variables are clean', () => {\r",
+											"    pm.expect(pm.collectionVariables.values.map((v) =>  v.key + ': ' + v.value)).to.be.an('array').empty;\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "postman-echo.com/get",
+									"host": [
+										"postman-echo",
+										"com"
+									],
+									"path": [
+										"get"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Request",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Search Operations",
+			"item": [
+				{
+					"name": "1. Start Reindex",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			]
 		},
