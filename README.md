@@ -268,4 +268,4 @@ This Postman collection relies on the following variables:
 Please consult the Partner Learning Camp B2B Commerce curriculum and course documentation for additional details.
 
 Enjoy the collection!
-- Tom Zarr (tzarr@salesforce.com) September, 2023
+- Tom Zarr (tzarr@salesforce.com) October, 2023
