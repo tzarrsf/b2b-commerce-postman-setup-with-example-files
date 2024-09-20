@@ -85,7 +85,7 @@ If you need to move this type of Administrator or Buyer authentication scheme ar
 
 Please don't take on a "do-it-yourself" approach with the oAuth 2.0 setup. Why?
 
-1. Most importantly, you don't need to. This has all been completed using variables. There's no guesswork on which log in needs the token appended to the password, etc.
+1. Most importantly, you don't need to. This has all been completed using variables. There's no guesswork on which login needs the token appended to the password, etc.
 2. There's scripting which checks if your token set up is correct to begin making requests.
 3. Tokens are passed in subsequent requests using __Bearer Token__ authentication on the requests needing it. Just turn it on - done.
 4. This was done "by design" so you can easily add your own requests or copy them and move them around with little to no impact whenever oAuth 2.0 is needed.
