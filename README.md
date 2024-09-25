@@ -35,8 +35,8 @@ This collection is intended for a B2B 'standalone' setup. That isn't to say you 
 <ol>
     <li>Product Search
         <ol>
-            <li><a href="./UseCases/ProductSearch_BasicSearch_BuyerLogin.html">Basic Search (Buyer Login)</a></li>
-            <li><a href="./UseCases/ProductSearch_BasicSearch_OAuth2.html">Basic Search (oAuth 2.0)</a></li>
+            <li><a href="./UseCases/ProductSearch_BasicSearch_BuyerLogin.md">Basic Search (Buyer Login)</a></li>
+            <li><a href="./UseCases/ProductSearch_BasicSearch_OAuth2..md">Basic Search (oAuth 2.0)</a></li>
         </ol>
     </li>
     <li>Product Categories
