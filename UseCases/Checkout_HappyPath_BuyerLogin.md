@@ -1,4 +1,4 @@
-# Cart - Happy Path - Buyer Login
+# Checkout - Happy Path - Buyer Login
 
 ## Last tested: N/A on TTID 0TT1Q000004Es40
 
