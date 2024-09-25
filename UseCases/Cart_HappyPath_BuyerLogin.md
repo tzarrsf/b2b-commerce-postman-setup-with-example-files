@@ -14,5 +14,5 @@
 1. Add single Product to Cart [Pre-Request](../LegoBin/AddSingleProductToCartViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/AddSingleProductToCartViaConnectApi_PostResponse.js)
 1. AddMultipleProductstoCartViaConnectApi [Pre-Request](../LegoBin/AddMultipleProductstoCartViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/AddMultipleProductstoCartViaConnectApi_PostResponse.js)
 1. GetCartItemsViaConnectApi [Pre-Request](../LegoBin/GetCartItemsViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/GetCartItemsViaConnectApi_PostResponse.js)
-1. Remove Cart Items (sequenced recursively) [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
+1. RemoveCartItemsRecursiveViaConnectApi (sequenced recursively) [Pre-Request](../LegoBin/RemoveCartItemsRecursiveViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/RemoveCartItemsRecursiveViaConnectApi_PostResponse.js)
 1. Check Cart is empty [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
