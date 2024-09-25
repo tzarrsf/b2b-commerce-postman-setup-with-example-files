@@ -12,7 +12,7 @@
 1. GetProductDetailViaConnectApi [Pre-Request](../LegoBin/GetProductDetailViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/GetProductDetailViaConnectApi_PostResponse.js)
 1. Get Active Cart [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
 1. Add single Product to Cart [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
-1. Add multiple Products to Cart [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
+1. AddMultipleProductstoCartViaConnectApi [Pre-Request](../LegoBin/AddMultipleProductstoCartViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/AddMultipleProductstoCartViaConnectApi_PostResponse.js)
 1. Get Cart Items [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
 1. Remove Cart Items (sequenced recursively) [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
 1. Check Cart is empty [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
