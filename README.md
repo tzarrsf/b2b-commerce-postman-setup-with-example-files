@@ -28,31 +28,33 @@ This collection is intended for a B2B 'standalone' setup. That isn't to say you 
 4. Collection variables are calculated and presented before each request. Please use this to your advantage.
 5. Tests are applied following each response. If something isn't right, I'd rather it fail fast.
 
-### This collection provides the following operations (some are a work in progress or being debugged for continuity)
+## Use Cases
+
+### This collection provides the following Use Case operations (some are a work in progress or being debugged for continuity)
 
 <ol>
     <li>Product Search
         <ol>
-            <li><a href="./LegoBin/UseCases/ProductSearch_BasicSearch_BuyerLogin.html">Basic Search (Buyer Login)</a></li>
-            <li><a href="./LegoBin/UseCases/ProductSearch_BasicSearch_OAuth2.html">Basic Search (oAuth 2.0)</a></li>
+            <li><a href="./UseCases/ProductSearch_BasicSearch_BuyerLogin.html">Basic Search (Buyer Login)</a></li>
+            <li><a href="./UseCases/ProductSearch_BasicSearch_OAuth2.html">Basic Search (oAuth 2.0)</a></li>
         </ol>
     </li>
     <li>Product Categories
         <ol>
-            <li><a href="./LegoBin/UseCases/ProductCategories_GetChildCategories_BuyerLogin.html">Get Child Categories (Buyer Login)</a></li>
-            <li><a href="./LegoBin/UseCases/ProductCategories_GetChildCategories_OAuth2.html">Get Child Categories (oAuth 2.0)</a></li>
+            <li><a href="./UseCases/ProductCategories_GetChildCategories_BuyerLogin.html">Get Child Categories (Buyer Login)</a></li>
+            <li><a href="./UseCases/ProductCategories_GetChildCategories_OAuth2.html">Get Child Categories (oAuth 2.0)</a></li>
         </ol>
     </li>
     <li>Product Pricing
         <ol>
-            <li>Get Child Categories (Buyer Login)</li>
-            <li>Get Child Categories (oAuth 2.0)</li>
+            <li><a href="./UseCases/ProductPricing_GetPricing_BuyerLogin.html">Get Child Categories (Buyer Login)</a></li>
+            <li><a href="./UseCases/ProductPricing_GetPricing_OAuth2.html">Get Child Categories (oAuth 2.0)</a></li>
         </ol>
     </li>
     <li>Cart
         <ol>
-            <li>Happy Path (Buyer Login)</li>
-            <li>Happy Path (Guest) - WIP</li>
+            <li><a href="./UseCases/Cart_HappyPath_BuyerLogin.html">Happy Path (Buyer Login)</a></li>
+            <li><a href="./UseCases/Cart_HappyPath_Guest.html">Happy Path (Guest) - WIP</a></li>
         </ol>
     </li>
     <li>Checkout
@@ -70,7 +72,7 @@ This collection is intended for a B2B 'standalone' setup. That isn't to say you 
     </li>
 </ol>
 
-### These integrations are planned for addition
+### These use cases are planned for addition
 
 <ol>
     <li>Deployment - Payment</li>
@@ -81,6 +83,10 @@ This collection is intended for a B2B 'standalone' setup. That isn't to say you 
     <li>Get Inventory Availability (oAuth 2.0)</li>
     <li>Search Operations - Perform Reindex</li>
 </ol>
+
+## Lego Bin
+
+This is what I call this approach of building long request chains out of swappable requests. Code definitions for all Pre-request and Post-response scripts can be seen in the "LegoBin" folder. The "UseCases" folder, linked to from this README file under [Use Cases](./#Use_Cases), contains HTML files explaining the Legos used in each use case and login methodology.
 
 ## Connected App Requirements
 
