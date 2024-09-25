@@ -12,11 +12,12 @@
 1. GetProductDetailViaConnectApi [Pre-Request](../LegoBin/GetProductDetailViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/GetProductDetailViaConnectApi_PostResponse.js)
 1. GetActiveCartViaConnectApi [Pre-Request](../LegoBin/GetActiveCartViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/GetActiveCartViaConnectApi_PostResponse.js)
 1. Add single Product to Cart [Pre-Request](../LegoBin/AddSingleProductToCartViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/AddSingleProductToCartViaConnectApi_PostResponse.js)
-
 1. StartCheckoutViaConnectApi [Pre-Request](../LegoBin/StartCheckoutViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/StartCheckoutViaConnectApi_PostResponse.js)
-1. GetShippingAddressesViaConnectApi [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
-1. AddShippingAddressViaConnectApi [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
-1. UpdateShippingAddressViaConnectApi [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
+1. GetShippingAddressesViaConnectApi [Pre-Request](../LegoBin/GetShippingAddressesViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/GetShippingAddressesViaConnectApi_PostResponse.js)
+1. AddShippingAddressViaConnectApi [Pre-Request](../LegoBin/AddShippingAddressViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/AddShippingAddressViaConnectApi_PostResponse.js)
+1. UpdateShippingUpdateressViaConnectApi [Pre-Request](../LegoBin/UpdateShippingUpdateressViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/UpdateShippingUpdateressViaConnectApi_PostResponse.js)
+
+
 1. ApplyShippingAddressToCheckoutViaConnectApi [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
 1. GetCheckoutViaConnectApi [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
 1. CreatePaymentViaConnectApi [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
