@@ -11,7 +11,6 @@
 
 Did not pass prior to change. Stock variables assume use of Capricorn sample products in [https://github.com/tzarrsf/b2b-commerce-gtk-admin/](https://github.com/tzarrsf/b2b-commerce-gtk-admin/) (see data folder) and "Machines" moved to top level with CSV import and was no longer a child of "Products."
 
-
 1. ClearCollectionVariables [Pre-Reqeust](../LegoBin/ClearCollectionVariables_PreRequest.js) | [Post-Response](../LegoBin/ClearCollectionVariables_PostResponse.js)
 1. LogInAsSystemAdministratorViaSoap [Pre-Request](../LegoBin/LogInAsSystemAdministratorViaSoap_PreRequest.js) | [Post-Response](../LegoBin/LogInAsSystemAdministratorViaSoap_PostResponse.js)
 1. LookUpandSetWebStoreIdViaQueryApi [Pre-Request](../LegoBin/LookUpandSetWebStoreIdViaQueryApi_PreRequest.js) | [Post-Response](../LegoBin/LookUpandSetWebStoreIdViaQueryApi_PostResponse.js)
