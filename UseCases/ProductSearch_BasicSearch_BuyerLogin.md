@@ -7,4 +7,3 @@
 1. LogInAsBuyerViaSoap [Pre-Request](../LegoBin/LogInAsBuyerViaSoap_PreRequest.js) | [Post-Response](../LegoBin/LogInAsBuyerViaSoap_PostResponse.js)
 1. SearchforProductsViaConnectApi [Pre-Request](../LegoBin/SearchforProductsViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/SearchforProductsViaConnectApi_PostResponse.js)
 1. GetProductDetailViaConnectApi [Pre-Request](../LegoBin/GetProductDetailViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/GetProductDetailViaConnectApi_PostResponse.js)
-</ol>

@@ -32,61 +32,43 @@ This collection is intended for a B2B 'standalone' setup. That isn't to say you 
 
 ### This collection provides the following Use Case operations (some are a work in progress or being debugged for continuity)
 
-<ol>
-    <li>Product Search
-        <ol>
-            <li><a href="./UseCases/ProductSearch_BasicSearch_BuyerLogin.md">Basic Search (Buyer Login)</a></li>
-            <li><a href="./UseCases/ProductSearch_BasicSearch_OAuth2..md">Basic Search (oAuth 2.0)</a></li>
-        </ol>
-    </li>
-    <li>Product Categories
-        <ol>
-            <li><a href="./UseCases/ProductCategories_GetChildCategories_BuyerLogin.html">Get Child Categories (Buyer Login)</a></li>
-            <li><a href="./UseCases/ProductCategories_GetChildCategories_OAuth2.html">Get Child Categories (oAuth 2.0)</a></li>
-        </ol>
-    </li>
-    <li>Product Pricing
-        <ol>
-            <li><a href="./UseCases/ProductPricing_GetPricing_BuyerLogin.html">Get Child Categories (Buyer Login)</a></li>
-            <li><a href="./UseCases/ProductPricing_GetPricing_OAuth2.html">Get Child Categories (oAuth 2.0)</a></li>
-        </ol>
-    </li>
-    <li>Cart
-        <ol>
-            <li><a href="./UseCases/Cart_HappyPath_BuyerLogin.html">Happy Path (Buyer Login)</a></li>
-            <li><a href="./UseCases/Cart_HappyPath_Guest.html">Happy Path (Guest) - WIP</a></li>
-        </ol>
-    </li>
-    <li>Checkout
-        <ol>
-            <li>Happy Path (Buyer Login)</li>
-            <li>Happy Path (Guest) - WIP</li>
-            <li>Cancel Checkout (Buyer Login) - WIP</li>
-        </ol>
-    </li>
-     <li>Order Summaries
-        <ol>
-            <li>Get Order Summaries by Date Range (Buyer Login)</li>
-            <li>Get Order Summaries by Date Range (oAuth 2.0)</li>
-        </ol>
-    </li>
-</ol>
+#### Product Search
+- [Basic Search (Buyer Login)](./UseCases/ProductSearch_BasicSearch_BuyerLogin.md)
+- [Basic Search (oAuth 2.0)](./UseCases/ProductSearch_BasicSearch_OAuth2.md)
+
+#### Product Categories
+- [Get Child Categories (Buyer Login)](./UseCases/ProductCategories_GetChildCategories_BuyerLogin.md)
+- [Get Child Categories (oAuth 2.0)](./UseCases/ProductCategories_GetChildCategories_OAuth2.md)
+
+#### Product Pricing
+- [Get Child Categories (Buyer Login)](./UseCases/ProductPricing_GetPricing_BuyerLogin.md)
+- [Get Child Categories (oAuth 2.0)](./UseCases/ProductPricing_GetPricing_OAuth2.md)
+
+#### Cart
+- [Happy Path (Buyer Login)](./UseCases/Cart_HappyPath_BuyerLogin.md)
+- [Happy Path (Guest) - WIP](./UseCases/Cart_HappyPath_Guest.md)
+
+#### Checkout
+- [Happy Path (Buyer Login)](./UseCases/Checkout_HappyPath_BuyerLogin.md)
+- Happy Path (Guest) - WIP
+- Cancel Checkout (Buyer Login) - WIP
+
+#### Order Summaries
+- [Get Order Summaries by Date Range (Buyer Login)](./UseCases/OrderSummaries_GetByDateRange_BuyerLogin.md)
+- [Get Order Summaries by Date Range (oAuth 2.0)](./UseCases/OrderSummaries_GetByDateRange_OAuth2.md)
 
 ### These use cases are planned for addition
-
-<ol>
-    <li>Deployment - Payment</li>
-    <li>Deployment - Register External Services for Aura</li>
-    <li>Deployment - Register External Services for LWR</li>
-    <li>Pricing (Guest)</li>
-    <li>Get Inventory Availability (Buyer Login)</li>
-    <li>Get Inventory Availability (oAuth 2.0)</li>
-    <li>Search Operations - Perform Reindex</li>
-</ol>
+- Deployment - Payment - LWR & CCA
+- Deployment - Register External Services for Aura
+- Deployment - Register External Services for LWR
+- Pricing (Guest)
+- Get Inventory Availability (Buyer Login)
+- Get Inventory Availability (oAuth 2.0)
+- Search - Perform Reindex
 
 ## Lego Bin
 
-This is what I call this approach of building long request chains out of swappable requests. Code definitions for all Pre-request and Post-response scripts can be seen in the "LegoBin" folder. The "UseCases" folder, linked to from this README file under [Use Cases](./#Use_Cases), contains HTML files explaining the Legos used in each use case and login methodology.
+Legos are a good metaphor for building long request chains out of the swappable requests. Maybe stringing beads or connecting train cars may have been better, but it's too late now. Code definitions for all Pre-request and Post-response scripts can be seen in the "LegoBin" folder. The "UseCases" folder, linked to from this README file under [Use Cases](./#Use_Cases), contains HTML files explaining the "Legos" used in each use case and login methodology (Buyer Login, oAuth 2.0, Guest).
 
 ## Connected App Requirements
 
