@@ -16,5 +16,5 @@ Did not pass prior to change. Stock variables assume use of Capricorn sample pro
 1. LookUpandSetWebStoreIdViaQueryApi [Pre-Request](../LegoBin/LookUpandSetWebStoreIdViaQueryApi_PreRequest.js) | [Post-Response](../LegoBin/LookUpandSetWebStoreIdViaQueryApi_PostResponse.js)
 1. SetProductCatalogIdByWebstoreId [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
 1. SetParentCategoryIdByProductCatalogId [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
-1. LogInAsBuyerViaSoap [Pre-Request](../LegoBin/LogInAsBuyerViaSoap _PreRequest.js) | [Post-Response](../LegoBin/LogInAsBuyerViaSoap _PostResponse.js)
+1. LogInAsBuyerViaSoap [Pre-Request](../LegoBin/LogInAsBuyerViaSoap_PreRequest.js) | [Post-Response](../LegoBin/LogInAsBuyerViaSoap_PostResponse.js)
 1. GetChildCategories [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)

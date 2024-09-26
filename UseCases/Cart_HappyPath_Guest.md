@@ -7,7 +7,7 @@
 1. LookUpandSetWebStoreIdViaQueryApi [Pre-Request](../LegoBin/LookUpandSetWebStoreIdViaQueryApi_PreRequest.js) | [Post-Response](../LegoBin/LookUpandSetWebStoreIdViaQueryApi_PostResponse.js)
 1. SetEffectiveAccountIdViaQueryApi [Pre-Request](../LegoBin/SetEffectiveAccountIdViaQueryApi_PreRequest.js) | [Post-Response](../LegoBin/SetEffectiveAccountIdViaQueryApi_PostResponse.js)
 1. SetProductIdsViaQueryApi [Pre-Request](../LegoBin/SetProductIdsViaQueryApi_PreRequest.js) | [Post-Response](../LegoBin/SetProductIdsViaQueryApi_PostResponse.js)
-1. LogInAsBuyerViaSoap [Pre-Request](../LegoBin/LogInAsBuyerViaSoap _PreRequest.js) | [Post-Response](../LegoBin/LogInAsBuyerViaSoap _PostResponse.js)
+1. LogInAsBuyerViaSoap [Pre-Request](../LegoBin/LogInAsBuyerViaSoap_PreRequest.js) | [Post-Response](../LegoBin/LogInAsBuyerViaSoap_PostResponse.js)
 1. SearchforProductsViaConnectApi [Pre-Request](../LegoBin/SearchforProductsViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/SearchforProductsViaConnectApi_PostResponse.js)
 1. GetProductDetailViaConnectApi [Pre-Request](../LegoBin/GetProductDetailViaConnectApi_PreRequest.js) | [Post-Response](../LegoBin/GetProductDetailViaConnectApi_PostResponse.js)
 1. Get Active Cart [Pre-Request](../LegoBin/XYZ_PreRequest.js) | [Post-Response](../LegoBin/XYZ_PostResponse.js)
